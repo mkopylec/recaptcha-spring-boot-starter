@@ -9,7 +9,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static java.lang.String.format;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class RecaptchaValidator {
@@ -50,9 +49,7 @@ public class RecaptchaValidator {
             log.debug("reCAPTCHA validation finished:\n    success: {}\n    errors: {}", result.isSuccess(), result.getErrorCodes());
             return result;
         } catch (RestClientException ex) {
-            throw new RecaptchaValidationException(
-                    format("Error validating reCAPTCHA. User response: '%s', verification URL: '%s'", userResponse, recaptcha.getVerificationUrl()), ex
-            );
+            throw new RecaptchaValidationException(userResponse, recaptcha.getVerificationUrl(), ex);
         }
     }
 }
