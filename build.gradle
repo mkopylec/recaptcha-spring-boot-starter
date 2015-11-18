@@ -24,7 +24,7 @@ dependencies {
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '+'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '+'
 
-//    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '+', optional
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '+', optional
 
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '+'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '+'

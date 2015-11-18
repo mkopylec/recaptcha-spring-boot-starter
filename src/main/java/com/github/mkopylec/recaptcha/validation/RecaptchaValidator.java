@@ -35,18 +35,16 @@ public class RecaptchaValidator {
     }
 
     public ValidationResult validate(String userResponse, String ipAddress) {
-        log.debug("Validating reCAPTCHA:\n    user response: {}\n    ip address: {}\n    verification url: {}",
-                userResponse, ipAddress, recaptcha.getVerificationUrl()
-        );
-
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("secret", recaptcha.getSecretKey());
         parameters.add("response", userResponse);
         parameters.add("remoteip", ipAddress);
 
+        log.debug("Validating reCAPTCHA:\n    verification url: {}\n    verification parameters: {}", recaptcha.getVerificationUrl(), parameters);
+
         try {
             ValidationResult result = restTemplate.postForEntity(recaptcha.getVerificationUrl(), parameters, ValidationResult.class).getBody();
-            log.debug("reCAPTCHA validation finished:\n    success: {}\n    errors: {}", result.isSuccess(), result.getErrorCodes());
+            log.debug("reCAPTCHA validation finished: {}", result);
             return result;
         } catch (RestClientException ex) {
             throw new RecaptchaValidationException(userResponse, recaptcha.getVerificationUrl(), ex);
