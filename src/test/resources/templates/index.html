@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <title>reCAPTCHA demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<form action="#" th:action="@{/}" method="post">
+    <div class="g-recaptcha" data-sitekey="6LfEQRETAAAAAMxkEr7RHrOE0XEUeeGUgcspSf2J"></div>
+    <br />
+    <input type="submit" value="Validate reCAPTCHA!" />
+</form>
+
+</body>
+</html>
