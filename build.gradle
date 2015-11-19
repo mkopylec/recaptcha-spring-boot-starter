@@ -1,20 +1,36 @@
 plugins {
     id 'nebula.optional-base' version '3.0.3'
 }
-
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 apply plugin: 'nebula.optional-base'
+
 
 group 'com.github.mkopylec'
 version '1.0.0'
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+}
+
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
+
 repositories {
     mavenCentral()
 }
-
 dependencies {
 
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '+'
