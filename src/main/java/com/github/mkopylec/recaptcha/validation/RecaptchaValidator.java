@@ -15,8 +15,8 @@ public class RecaptchaValidator {
 
     private static final Logger log = getLogger(RecaptchaValidator.class);
 
-    private final RestTemplate restTemplate;
-    private final Validation recaptcha;
+    protected final RestTemplate restTemplate;
+    protected final Validation recaptcha;
 
     public RecaptchaValidator(RestTemplate restTemplate, Validation recaptcha) {
         this.restTemplate = restTemplate;

@@ -11,6 +11,7 @@ public class RecaptchaProperties {
 
     private Validation validation = new Validation();
     private Security security = new Security();
+    private Testing testing = new Testing();
 
     public Validation getValidation() {
         return validation;
@@ -26,6 +27,14 @@ public class RecaptchaProperties {
 
     public void setSecurity(Security security) {
         this.security = security;
+    }
+
+    public Testing getTesting() {
+        return testing;
+    }
+
+    public void setTesting(Testing testing) {
+        this.testing = testing;
     }
 
     public static class Validation {
@@ -78,6 +87,28 @@ public class RecaptchaProperties {
 
         public void setSecuredPaths(List<String> securedPaths) {
             this.securedPaths = securedPaths;
+        }
+    }
+
+    public static class Testing {
+
+        private boolean enabled = false;
+        private boolean successResult = true;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public boolean isSuccessResult() {
+            return successResult;
+        }
+
+        public void setSuccessResult(boolean successResult) {
+            this.successResult = successResult;
         }
     }
 }

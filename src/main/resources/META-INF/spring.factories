@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.github.mkopylec.recaptcha.SecurityConfiguration,\
-com.github.mkopylec.recaptcha.ValidationConfiguration
+com.github.mkopylec.recaptcha.security.SecurityConfiguration,\
+com.github.mkopylec.recaptcha.validation.ValidationConfiguration,\
+com.github.mkopylec.recaptcha.testing.TestingConfiguration

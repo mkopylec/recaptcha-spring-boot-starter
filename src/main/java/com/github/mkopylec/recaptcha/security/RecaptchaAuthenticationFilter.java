@@ -20,7 +20,7 @@ import static org.springframework.util.Assert.notNull;
 
 public class RecaptchaAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    private RecaptchaValidator recaptchaValidator;
+    protected RecaptchaValidator recaptchaValidator;
 
     public RecaptchaAuthenticationFilter(RequestMatcher requestMatcher, RecaptchaValidator recaptchaValidator, Security recaptcha) {
         super(requestMatcher);

@@ -1,5 +1,6 @@
 package com.github.mkopylec.recaptcha.validation;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -10,9 +11,16 @@ import static java.util.Collections.unmodifiableList;
 public class ValidationResult {
 
     private boolean success;
-
-    @JsonProperty("error-codes")
     private List<ErrorCode> errorCodes = new ArrayList<>();
+
+    @JsonCreator
+    public ValidationResult(
+            @JsonProperty("success") boolean success,
+            @JsonProperty("error-codes") List<ErrorCode> errorCodes
+    ) {
+        this.success = success;
+        this.errorCodes = errorCodes;
+    }
 
     public boolean isSuccess() {
         return success;
@@ -22,20 +30,12 @@ public class ValidationResult {
         return !success;
     }
 
-    protected void setSuccess(boolean success) {
-        this.success = success;
-    }
-
     public List<ErrorCode> getErrorCodes() {
         return unmodifiableList(errorCodes);
     }
 
     public boolean hasError(ErrorCode error) {
         return errorCodes.contains(error);
-    }
-
-    protected void setErrorCodes(List<ErrorCode> errorCodes) {
-        this.errorCodes = errorCodes;
     }
 
     @Override

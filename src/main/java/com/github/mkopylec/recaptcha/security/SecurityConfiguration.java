@@ -1,6 +1,6 @@
-package com.github.mkopylec.recaptcha;
+package com.github.mkopylec.recaptcha.security;
 
-import com.github.mkopylec.recaptcha.security.RecaptchaAuthenticationFilter;
+import com.github.mkopylec.recaptcha.RecaptchaProperties;
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
