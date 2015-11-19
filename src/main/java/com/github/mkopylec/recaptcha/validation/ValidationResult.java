@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.unmodifiableList;
+
 public class ValidationResult {
 
     private boolean success;
@@ -16,12 +18,20 @@ public class ValidationResult {
         return success;
     }
 
+    public boolean isFailure() {
+        return !success;
+    }
+
     protected void setSuccess(boolean success) {
         this.success = success;
     }
 
     public List<ErrorCode> getErrorCodes() {
-        return errorCodes;
+        return unmodifiableList(errorCodes);
+    }
+
+    public boolean hasError(ErrorCode error) {
+        return errorCodes.contains(error);
     }
 
     protected void setErrorCodes(List<ErrorCode> errorCodes) {

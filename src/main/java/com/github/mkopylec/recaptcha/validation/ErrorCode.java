@@ -10,7 +10,7 @@ public enum ErrorCode {
     INVALID_USER_CAPTCHA_RESPONSE;
 
     @JsonCreator
-    public static ErrorCode fromValue(String value) {
+    private static ErrorCode fromValue(String value) {
         if (value == null) {
             return null;
         }

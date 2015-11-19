@@ -1,6 +1,6 @@
 package com.github.mkopylec.recaptcha.validation;
 
-import com.github.mkopylec.recaptcha.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.RecaptchaProperties.Validation;
 import org.slf4j.Logger;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -16,17 +16,18 @@ public class RecaptchaValidator {
     private static final Logger log = getLogger(RecaptchaValidator.class);
 
     private final RestTemplate restTemplate;
-    private final RecaptchaProperties recaptcha;
+    private final Validation recaptcha;
 
-    public RecaptchaValidator(RestTemplate restTemplate, RecaptchaProperties recaptcha) {
+    public RecaptchaValidator(RestTemplate restTemplate, Validation recaptcha) {
         this.restTemplate = restTemplate;
         this.recaptcha = recaptcha;
     }
 
     public ValidationResult validate(HttpServletRequest request) {
-        String ipAddress = recaptcha.getRemoteIpHeader() != null
-                ? request.getHeader(recaptcha.getRemoteIpHeader())
-                : request.getRemoteAddr();
+        return validate(request, request.getRemoteAddr());
+    }
+
+    public ValidationResult validate(HttpServletRequest request, String ipAddress) {
         return validate(request.getParameter(recaptcha.getResponseParameter()), ipAddress);
     }
 

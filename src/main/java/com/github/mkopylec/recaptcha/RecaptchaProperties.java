@@ -2,43 +2,82 @@ package com.github.mkopylec.recaptcha;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.List;
+
+import static java.util.Collections.singletonList;
+
 @ConfigurationProperties("spring.recaptcha")
 public class RecaptchaProperties {
 
-    private String secretKey;
-    private String responseParameter = "g-recaptcha-response";
-    private String verificationUrl = "https://www.google.com/recaptcha/api/siteverify";
-    private String remoteIpHeader;
+    private Validation validation = new Validation();
+    private Security security = new Security();
 
-    public String getSecretKey() {
-        return secretKey;
+    public Validation getValidation() {
+        return validation;
     }
 
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
+    public void setValidation(Validation validation) {
+        this.validation = validation;
     }
 
-    public String getResponseParameter() {
-        return responseParameter;
+    public Security getSecurity() {
+        return security;
     }
 
-    public void setResponseParameter(String responseParameter) {
-        this.responseParameter = responseParameter;
+    public void setSecurity(Security security) {
+        this.security = security;
     }
 
-    public String getVerificationUrl() {
-        return verificationUrl;
+    public static class Validation {
+
+        private String secretKey;
+        private String responseParameter = "g-recaptcha-response";
+        private String verificationUrl = "https://www.google.com/recaptcha/api/siteverify";
+
+        public String getSecretKey() {
+            return secretKey;
+        }
+
+        public void setSecretKey(String secretKey) {
+            this.secretKey = secretKey;
+        }
+
+        public String getResponseParameter() {
+            return responseParameter;
+        }
+
+        public void setResponseParameter(String responseParameter) {
+            this.responseParameter = responseParameter;
+        }
+
+        public String getVerificationUrl() {
+            return verificationUrl;
+        }
+
+        public void setVerificationUrl(String verificationUrl) {
+            this.verificationUrl = verificationUrl;
+        }
     }
 
-    public void setVerificationUrl(String verificationUrl) {
-        this.verificationUrl = verificationUrl;
-    }
+    public static class Security {
 
-    public String getRemoteIpHeader() {
-        return remoteIpHeader;
-    }
+        private String failureUrl = "/login?recaptchaError";
+        private List<String> securedPaths = singletonList("/login");
 
-    public void setRemoteIpHeader(String remoteIpHeader) {
-        this.remoteIpHeader = remoteIpHeader;
+        public String getFailureUrl() {
+            return failureUrl;
+        }
+
+        public void setFailureUrl(String failureUrl) {
+            this.failureUrl = failureUrl;
+        }
+
+        public List<String> getSecuredPaths() {
+            return securedPaths;
+        }
+
+        public void setSecuredPaths(List<String> securedPaths) {
+            this.securedPaths = securedPaths;
+        }
     }
 }
