@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
-@Configuration
+@Configuration("recaptchaValidationConfiguration")
 @EnableConfigurationProperties(RecaptchaProperties.class)
-@ConditionalOnProperty(name = "spring.recaptcha.testing.enabled", havingValue = "false")
+@ConditionalOnProperty(name = "spring.recaptcha.testing.enabled", havingValue = "false", matchIfMissing = true)
 public class ValidationConfiguration {
 
     @Autowired

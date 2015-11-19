@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration("recaptchaTestingConfiguration")
 @EnableConfigurationProperties(RecaptchaProperties.class)
 @ConditionalOnProperty(name = "spring.recaptcha.testing.enabled")
 public class TestingConfiguration {
