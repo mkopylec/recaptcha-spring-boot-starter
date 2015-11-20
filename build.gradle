@@ -2,7 +2,7 @@ plugins {
     id 'nebula.optional-base' version '3.0.3'
 }
 
-apply plugin: 'java'
+apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 apply plugin: 'nebula.optional-base'
 
@@ -11,6 +11,25 @@ version '1.0.0'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '+'
+    compile group: 'org.springframework', name: 'spring-web', version: '+'
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '+'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '+'
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '+', optional
+
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '+'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '+'
+    testCompile group: 'org.spockframework', name: 'spock-spring', version: '+'
+    testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: '1.57'
+}
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
@@ -26,23 +45,4 @@ publishing {
             }
         }
     }
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '+'
-    compile group: 'org.springframework', name: 'spring-web', version: '+'
-//    compile group: 'org.apache.commons', name: 'commons-lang3', version: '+'
-//    compile group: 'com.google.guava', name: 'guava', version: '+'
-    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '+'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '+'
-
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '+', optional
-
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '+'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '+'
 }

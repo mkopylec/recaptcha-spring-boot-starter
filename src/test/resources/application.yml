@@ -1,0 +1,10 @@
+spring.recaptcha:
+  validation.verificationUrl: http://localhost:8081/recaptcha/api/siteverify
+
+security:
+  ignored: /testValidation/**
+  user:
+    name: user
+    password: password
+
+logging.level.org.springframework.security: DEBUG

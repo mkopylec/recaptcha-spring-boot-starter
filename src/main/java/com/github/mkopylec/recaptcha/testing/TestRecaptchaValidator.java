@@ -8,9 +8,6 @@ import com.github.mkopylec.recaptcha.validation.ValidationResult;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 
-import static com.github.mkopylec.recaptcha.validation.ErrorCode.INVALID_USER_CAPTCHA_RESPONSE;
-import static java.util.Collections.singletonList;
-
 public class TestRecaptchaValidator extends RecaptchaValidator {
 
     protected final Testing testing;
@@ -44,6 +41,6 @@ public class TestRecaptchaValidator extends RecaptchaValidator {
         if (testing.isSuccessResult()) {
             return new ValidationResult(true, new ArrayList<ErrorCode>());
         }
-        return new ValidationResult(false, singletonList(INVALID_USER_CAPTCHA_RESPONSE));
+        return new ValidationResult(false, testing.getResultErrorCodes());
     }
 }

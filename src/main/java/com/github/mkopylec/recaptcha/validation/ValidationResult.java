@@ -1,6 +1,7 @@
 package com.github.mkopylec.recaptcha.validation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class ValidationResult {
         return success;
     }
 
+    @JsonIgnore
     public boolean isFailure() {
         return !success;
     }

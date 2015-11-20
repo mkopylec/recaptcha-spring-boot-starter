@@ -1,9 +1,11 @@
 package com.github.mkopylec.recaptcha;
 
+import com.github.mkopylec.recaptcha.validation.ErrorCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
 
+import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_USER_CAPTCHA_RESPONSE;
 import static java.util.Collections.singletonList;
 
 @ConfigurationProperties("spring.recaptcha")
@@ -94,6 +96,7 @@ public class RecaptchaProperties {
 
         private boolean enabled = false;
         private boolean successResult = true;
+        private List<ErrorCode> resultErrorCodes = singletonList(MISSING_USER_CAPTCHA_RESPONSE);
 
         public boolean isEnabled() {
             return enabled;
@@ -109,6 +112,14 @@ public class RecaptchaProperties {
 
         public void setSuccessResult(boolean successResult) {
             this.successResult = successResult;
+        }
+
+        public List<ErrorCode> getResultErrorCodes() {
+            return resultErrorCodes;
+        }
+
+        public void setResultErrorCodes(List<ErrorCode> resultErrorCodes) {
+            this.resultErrorCodes = resultErrorCodes;
         }
     }
 }
