@@ -75,6 +75,14 @@ spring.recaptcha.validation.secretKey: <your_secret_key>
 ```
 
 #### Spring Security web application usage:
+Add Spring Security dependency:
+
+```groovy
+dependencies {
+    compile group: 'org.springframework.boot:spring-boot-starter-security:1.3.0.RELEASE'
+}
+```
+
 Embed reCAPTCHA in HTML **login** web page:
 
 ```html
