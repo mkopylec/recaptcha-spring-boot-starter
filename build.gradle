@@ -31,6 +31,10 @@ dependencies {
     testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: '1.57'
 }
 
+configurations {
+    all*.exclude group: 'org.mortbay.jetty', module: 'servlet-api'
+}
+
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
 }

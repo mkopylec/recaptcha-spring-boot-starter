@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate
 import spock.lang.Shared
 import spock.lang.Specification
 
-@WebIntegrationTest
+@WebIntegrationTest(randomPort = true)
 @ContextConfiguration(loader = SpringApplicationContextLoader, classes = TestApplication)
 abstract class BasicSpec extends Specification {
 
