@@ -27,8 +27,7 @@ class ValidationSpec extends BasicSpec {
         recaptcha.validation.secretKey = VALID_SECRET
 
         when:
-        def response = POST '/testValidation/userResponse', ValidationResult,
-                ['g-recaptcha-response': VALID_CAPTCHA_RESPONSE]
+        def response = POST '/testValidation/userResponse', ValidationResult, ['g-recaptcha-response': VALID_CAPTCHA_RESPONSE]
 
         then:
         response.statusCode == OK
@@ -42,8 +41,7 @@ class ValidationSpec extends BasicSpec {
         recaptcha.validation.secretKey = VALID_SECRET
 
         when:
-        def response = POST 'testValidation/userResponseAndIp', ValidationResult,
-                ['g-recaptcha-response': VALID_CAPTCHA_RESPONSE]
+        def response = POST 'testValidation/userResponseAndIp', ValidationResult, ['g-recaptcha-response': VALID_CAPTCHA_RESPONSE]
 
         then:
         response.statusCode == OK
@@ -57,8 +55,7 @@ class ValidationSpec extends BasicSpec {
         recaptcha.validation.secretKey = INVALID_SECRET
 
         when:
-        def response = POST 'testValidation/userResponse', ValidationResult,
-                ['g-recaptcha-response': VALID_CAPTCHA_RESPONSE]
+        def response = POST 'testValidation/userResponse', ValidationResult, ['g-recaptcha-response': VALID_CAPTCHA_RESPONSE]
 
         then:
         response.statusCode == OK

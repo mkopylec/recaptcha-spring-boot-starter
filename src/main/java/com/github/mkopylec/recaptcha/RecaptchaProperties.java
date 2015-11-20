@@ -73,7 +73,7 @@ public class RecaptchaProperties {
     public static class Security {
 
         private String failureUrl = "/login?recaptchaError";
-        private List<String> securedPaths = singletonList("/login");
+        private String loginProcessingUrl = "/login";
 
         public String getFailureUrl() {
             return failureUrl;
@@ -83,12 +83,12 @@ public class RecaptchaProperties {
             this.failureUrl = failureUrl;
         }
 
-        public List<String> getSecuredPaths() {
-            return securedPaths;
+        public String getLoginProcessingUrl() {
+            return loginProcessingUrl;
         }
 
-        public void setSecuredPaths(List<String> securedPaths) {
-            this.securedPaths = securedPaths;
+        public void setLoginProcessingUrl(String loginProcessingUrl) {
+            this.loginProcessingUrl = loginProcessingUrl;
         }
     }
 

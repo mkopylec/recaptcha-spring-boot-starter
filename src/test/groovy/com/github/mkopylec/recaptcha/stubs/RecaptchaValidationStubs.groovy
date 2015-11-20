@@ -3,6 +3,7 @@ package com.github.mkopylec.recaptcha.stubs
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.client.ValueMatchingStrategy
 
+import static com.github.mkopylec.recaptcha.Strings.INVALID_CAPTCHA_RESPONSE
 import static com.github.mkopylec.recaptcha.Strings.INVALID_SECRET
 import static com.github.mkopylec.recaptcha.Strings.REMOTE_IP_ADDRESS
 import static com.github.mkopylec.recaptcha.Strings.VALID_CAPTCHA_RESPONSE
@@ -31,6 +32,10 @@ class RecaptchaValidationStubs {
 
     static void stubMissingResponseRecaptchaValidation() {
         stubRecaptchaValidation(null, VALID_SECRET, '', false, ['missing-input-response'])
+    }
+
+    static void stubInvalidResponseRecaptchaValidation() {
+        stubRecaptchaValidation(INVALID_CAPTCHA_RESPONSE, VALID_SECRET, '', false, ['invalid-input-response'])
     }
 
     private static void stubRecaptchaValidation(

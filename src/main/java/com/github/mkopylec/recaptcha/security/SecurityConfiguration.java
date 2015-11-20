@@ -10,12 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration("recaptchaSecurityConfiguration")
 @ConditionalOnClass({EnableWebSecurity.class, AbstractAuthenticationProcessingFilter.class})
@@ -28,10 +22,6 @@ public class SecurityConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public RecaptchaAuthenticationFilter recaptchaAuthenticationFilter(RecaptchaValidator recaptchaValidator) {
-        List<RequestMatcher> requestMatchers = new ArrayList<>();
-        for (String securedPath : recaptcha.getSecurity().getSecuredPaths()) {
-            requestMatchers.add(new AntPathRequestMatcher(securedPath, "POST"));
-        }
-        return new RecaptchaAuthenticationFilter(new OrRequestMatcher(requestMatchers), recaptchaValidator, recaptcha.getSecurity());
+        return new RecaptchaAuthenticationFilter(recaptchaValidator, recaptcha);
     }
 }

@@ -1,10 +1,10 @@
 plugins {
+    id 'groovy'
+    id 'maven-publish'
+    id 'jacoco'
     id 'nebula.optional-base' version '3.0.3'
+    id 'com.github.kt3k.coveralls' version '2.3.1'
 }
-
-apply plugin: 'groovy'
-apply plugin: 'maven-publish'
-apply plugin: 'nebula.optional-base'
 
 group 'com.github.mkopylec'
 version '1.0.0'
@@ -48,5 +48,12 @@ publishing {
                 classifier "sources"
             }
         }
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
     }
 }

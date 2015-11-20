@@ -1,5 +1,6 @@
 package com.github.mkopylec.recaptcha.security;
 
+import com.github.mkopylec.recaptcha.RecaptchaProperties;
 import com.github.mkopylec.recaptcha.RecaptchaProperties.Security;
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
 import com.github.mkopylec.recaptcha.validation.ValidationResult;
@@ -8,7 +9,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -16,25 +17,36 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.util.Assert.notNull;
+import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
 public class RecaptchaAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    protected RecaptchaValidator recaptchaValidator;
+    public static final String RECAPTCHA_ERROR_QUERY_PARAM = "recaptchaError";
+    public static final String RECAPTCHA_AUTHENTICATION_PRINCIPAL = "reCAPTCHA";
 
-    public RecaptchaAuthenticationFilter(RequestMatcher requestMatcher, RecaptchaValidator recaptchaValidator, Security recaptcha) {
-        super(requestMatcher);
+    protected final RecaptchaValidator recaptchaValidator;
+    protected final RecaptchaProperties recaptcha;
+
+    public RecaptchaAuthenticationFilter(RecaptchaValidator recaptchaValidator, RecaptchaProperties recaptcha) {
+        super(new AntPathRequestMatcher(recaptcha.getSecurity().getLoginProcessingUrl(), POST.toString()));
         this.recaptchaValidator = recaptchaValidator;
-        //TODO resolve failure URL from request matcher
-        setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(recaptcha.getFailureUrl()));
+        this.recaptcha = recaptcha;
+        setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(resolveFailureUrl(recaptcha.getSecurity())));
         setContinueChainBeforeSuccessfulAuthentication(true);
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        Authentication authentication = new PreAuthenticatedAuthenticationToken(RECAPTCHA_AUTHENTICATION_PRINCIPAL, null);
+        if (noRecaptchaResponse(request)) {
+            return authentication;
+        }
         ValidationResult result = recaptchaValidator.validate(request);
         if (result.isSuccess()) {
-            return new PreAuthenticatedAuthenticationToken("reCAPTCHA", null);
+            authentication.setAuthenticated(true);
+            return authentication;
         }
         throw new RecaptchaAuthenticationException(result.getErrorCodes());
     }
@@ -42,6 +54,19 @@ public class RecaptchaAuthenticationFilter extends AbstractAuthenticationProcess
     @Override
     public void afterPropertiesSet() {
         notNull(recaptchaValidator, "Missing recaptcha validator");
+    }
+
+    private String resolveFailureUrl(Security recaptcha) {
+        if (recaptcha.getFailureUrl() != null) {
+            return recaptcha.getFailureUrl();
+        }
+        return fromUriString(recaptcha.getLoginProcessingUrl())
+                .queryParam(RECAPTCHA_ERROR_QUERY_PARAM)
+                .toUriString();
+    }
+
+    private boolean noRecaptchaResponse(HttpServletRequest request) {
+        return !request.getParameterMap().containsKey(recaptcha.getValidation().getResponseParameter());
     }
 
     @Override
