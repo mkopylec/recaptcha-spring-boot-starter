@@ -146,6 +146,9 @@ You can customize the filter URIs using `spring.recaptcha.security.securedPaths`
 When user enters wrong reCAPTCHA response he will be redirect to _/login?recaptchaError_.
 You can customize the failure redirect using `spring.recaptcha.security.failureUrl` property.
 
+#### Testing mode
+To be done...
+
 ## Examples
 Go to [reCAPTCHA Spring Boot Starter samples](https://github.com/mkopylec/recaptcha-spring-boot-starter-samples) to view example applications.
 

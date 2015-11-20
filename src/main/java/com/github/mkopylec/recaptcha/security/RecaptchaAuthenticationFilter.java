@@ -25,6 +25,7 @@ public class RecaptchaAuthenticationFilter extends AbstractAuthenticationProcess
     public RecaptchaAuthenticationFilter(RequestMatcher requestMatcher, RecaptchaValidator recaptchaValidator, Security recaptcha) {
         super(requestMatcher);
         this.recaptchaValidator = recaptchaValidator;
+        //TODO resolve failure URL from request matcher
         setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(recaptcha.getFailureUrl()));
         setContinueChainBeforeSuccessfulAuthentication(true);
     }
