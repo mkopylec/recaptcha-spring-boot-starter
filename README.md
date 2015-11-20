@@ -86,8 +86,8 @@ Embed reCAPTCHA in HTML **login** web page:
 <body>
 
 <form action="/login" method="post">
-    User: <input name="username" type="text" value="user" />
-    Password: <input name="password" type="password" value="top-secret" />
+    User: <input name="username" type="text" value="" />
+    Password: <input name="password" type="password" value="" />
     <div class="g-recaptcha" data-sitekey="<your_site_key>"></div>
     <input type="submit" value="Log in" />
 </form>
