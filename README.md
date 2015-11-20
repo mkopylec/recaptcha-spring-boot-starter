@@ -1,6 +1,9 @@
 # reCAPTCHA Spring Boot Starter
 [![Build Status](https://travis-ci.org/mkopylec/recaptcha-spring-boot-starter.svg?branch=master)](https://travis-ci.org/mkopylec/recaptcha-spring-boot-starter)
-[![Release](https://img.shields.io/github/release/mkopylec/recaptcha-spring-boot-starter.svg?label=JitPack)](https://jitpack.io/#mkopylec/recaptcha-spring-boot-starter/0.1.0)
+[![Release](https://img.shields.io/github/release/mkopylec/recaptcha-spring-boot-starter.svg?label=JitPack)](https://jitpack.io/#mkopylec/recaptcha-spring-boot-starter)
+
+## Installing
+See [here](https://jitpack.io/#mkopylec/recaptcha-spring-boot-starter/0.1.0) for more information.
 
 To be done...
 
