@@ -3,7 +3,15 @@
 [![Release](https://img.shields.io/github/release/mkopylec/recaptcha-spring-boot-starter.svg?label=JitPack)](https://jitpack.io/#mkopylec/recaptcha-spring-boot-starter)
 
 ## Installing
-See [here](https://jitpack.io/#mkopylec/recaptcha-spring-boot-starter/0.1.0) for more information.
+
+```groovy
+repositories {
+    maven { url "https://jitpack.io" }
+}
+dependencies {
+    compile 'com.github.mkopylec:recaptcha-spring-boot-starter:0.1.0'
+}
+```
 
 To be done...
 
