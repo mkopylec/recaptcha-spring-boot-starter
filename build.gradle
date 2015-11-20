@@ -18,16 +18,16 @@ repositories {
 
 dependencies {
 
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '+'
-    compile group: 'org.springframework', name: 'spring-web', version: '+'
-    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '+'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '+'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.3'
+    compile group: 'org.springframework', name: 'spring-web', version: '4.2.3.RELEASE'
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '1.3.0.RELEASE'
 
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '+', optional
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '1.3.0.RELEASE', optional
 
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '+'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '+'
-    testCompile group: 'org.spockframework', name: 'spock-spring', version: '+'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.3.0.RELEASE'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.3.0.RELEASE'
+    testCompile group: 'org.spockframework', name: 'spock-spring', version: '1.0-groovy-2.4'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: '1.57'
 }
 
