@@ -97,8 +97,6 @@ Embed reCAPTCHA in HTML **login** web page:
 Add `RecaptchaAuthenticationFilter` **before** `UsernamePasswordAuthenticationFilter` in your security configuration
 
 ```java
-package com.github.mkopylec.recaptcha;
-
 import com.github.mkopylec.recaptcha.security.RecaptchaAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -134,8 +132,8 @@ spring.recaptcha.validation.secretKey: <your_secret_key>
 
 ##### Additional info
 The `RecaptchaAuthenticationFilter` must be fired on the **same URI** as the **login POST** request is processed.
-You can customize the URIs using `spring.recaptcha.security.securedPaths` property.
-When user enters wrong reCAPTCHA response he will be redirect to _/login?recaptchaError_
+You can customize the filter URIs using `spring.recaptcha.security.securedPaths` property.
+When user enters wrong reCAPTCHA response he will be redirect to _/login?recaptchaError_.
 You can customize the failure redirect using `spring.recaptcha.security.failureUrl` property.
 
 ## Examples
