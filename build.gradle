@@ -57,6 +57,11 @@ signing {
     sign configurations.archives
 }
 
+ext {
+    ossrhUsername = project.ext.has('ossrhUsername') ? project.ext.ossrhUsername : ''
+    ossrhPassword = project.ext.has('ossrhPassword') ? project.ext.ossrhPassword : ''
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
