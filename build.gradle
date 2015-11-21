@@ -5,7 +5,6 @@ plugins {
     id 'nebula.optional-base' version '3.0.3'
     id 'com.github.kt3k.coveralls' version '2.3.1'
     id 'maven'
-    id 'signing'
 }
 
 group 'com.github.mkopylec'
@@ -51,10 +50,6 @@ task sourceJar(type: Jar) {
 
 artifacts {
     archives javadocJar, sourceJar
-}
-
-signing {
-    sign configurations.archives
 }
 
 ext {
