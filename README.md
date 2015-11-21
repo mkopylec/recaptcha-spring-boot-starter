@@ -18,7 +18,7 @@ dependencies {
 ## How to use
 The starter can be used in 3 different modes:
 
-#### Normal web application usage:
+### Normal web application usage
 Embed reCAPTCHA in HTML web page:
 
 ```html
@@ -75,7 +75,7 @@ spring.recaptcha.validation.secretKey: <your_secret_key>
 ##### Additional info
 `RecaptchaValidator` provides couple of useful methods to validate reCAPTCHA response.
 
-#### Spring Security web application usage:
+### Spring Security web application usage
 Add Spring Security dependency:
 
 ```gradle
@@ -149,8 +149,39 @@ The default filter URL is _/login_ but you can customize it using `spring.recapt
 When user enters wrong reCAPTCHA response he will be redirected to `spring.recaptcha.security.loginProcessingUrl` _recaptchaError_ query parameter by default.
 You can customize the failure redirect using `spring.recaptcha.security.failureUrl` property.
 
-#### Testing mode
-To be done...
+### Integration testing mode usage
+Enable testing mode:
+
+```yaml
+spring.recaptcha.testing.enabled: true
+```
+
+Configure testing mode:
+
+```yaml
+spring.recaptcha.testing.successResult: true
+spring.recaptcha.testing.resultErrorCodes: INVALID_SECRET_KEY, INVALID_USER_CAPTCHA_RESPONSE
+```
+
+##### Additional info
+In testing mode na remote reCAPTCHA validation is fired, the validation process is offline.
+
+## Configuration properties list
+
+```yaml
+spring.recaptcha:
+    validation:
+        secretKey: # reCAPTCHA secret key
+        responseParameter: g-recaptcha-response # User reCAPTCHA response HTTP request parameter
+        verificationUrl: https://www.google.com/recaptcha/api/siteverify # reCAPTCHA validation endpoint
+    security:
+        loginProcessingUrl: /login # Login form processing URL from Spring Security configuration
+        failureUrl: # Fixed URL to redirect to when reCAPTCHA validation fails
+    testing:
+        enabled: false # Flag for enabling and disabling testing mode
+        successResult: true # Defines successful or unsuccessful validation result, can be changed during tests
+        resultErrorCodes: MISSING_USER_CAPTCHA_RESPONSE # Errors in validation result
+```
 
 ## Examples
 Go to [reCAPTCHA Spring Boot Starter samples](https://github.com/mkopylec/recaptcha-spring-boot-starter-samples) to view example applications.

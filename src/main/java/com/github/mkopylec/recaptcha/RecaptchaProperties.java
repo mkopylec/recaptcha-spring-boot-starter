@@ -72,7 +72,7 @@ public class RecaptchaProperties {
 
     public static class Security {
 
-        private String failureUrl = "/login?recaptchaError";
+        private String failureUrl;
         private String loginProcessingUrl = "/login";
 
         public String getFailureUrl() {
