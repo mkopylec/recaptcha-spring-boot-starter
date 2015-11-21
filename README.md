@@ -181,7 +181,7 @@ spring.recaptcha:
     testing:
         enabled: false # Flag for enabling and disabling testing mode
         successResult: true # Defines successful or unsuccessful validation result, can be changed during tests
-        resultErrorCodes: # Errors in validation result
+        resultErrorCodes: # Errors in validation result, can be changed during tests
 ```
 
 ## Examples
