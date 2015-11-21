@@ -175,7 +175,7 @@ In testing mode no remote reCAPTCHA validation is fired, the validation process 
 recaptcha:
     validation:
         secretKey: # reCAPTCHA secret key
-        responseParameter: g-recaptcha-response # User reCAPTCHA response HTTP request parameter
+        responseParameter: g-recaptcha-response # HTTP request parameter name containing user reCAPTCHA response.
         verificationUrl: https://www.google.com/recaptcha/api/siteverify # reCAPTCHA validation endpoint
     security:
         loginProcessingUrl: /login # Login form processing URL from Spring Security configuration

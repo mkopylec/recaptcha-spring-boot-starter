@@ -6,11 +6,23 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * reCAPTCHA configuration properties.
+ */
 @ConfigurationProperties("recaptcha")
 public class RecaptchaProperties {
 
+    /**
+     * Properties responsible for reCAPTCHA validation on Google's servers.
+     */
     private Validation validation = new Validation();
+    /**
+     * Properties responsible for integration with Spring Security.
+     */
     private Security security = new Security();
+    /**
+     * Properties responsible for testing mode behaviour.
+     */
     private Testing testing = new Testing();
 
     public Validation getValidation() {
@@ -39,8 +51,17 @@ public class RecaptchaProperties {
 
     public static class Validation {
 
+        /**
+         * reCAPTCHA secret key.
+         */
         private String secretKey;
+        /**
+         * HTTP request parameter name containing user reCAPTCHA response.
+         */
         private String responseParameter = "g-recaptcha-response";
+        /**
+         * reCAPTCHA validation endpoint.
+         */
         private String verificationUrl = "https://www.google.com/recaptcha/api/siteverify";
 
         public String getSecretKey() {
@@ -70,7 +91,13 @@ public class RecaptchaProperties {
 
     public static class Security {
 
+        /**
+         * Fixed URL to redirect to when reCAPTCHA validation fails.
+         */
         private String failureUrl;
+        /**
+         * Login form processing URL from Spring Security configuration.
+         */
         private String loginProcessingUrl = "/login";
 
         public String getFailureUrl() {
@@ -92,8 +119,17 @@ public class RecaptchaProperties {
 
     public static class Testing {
 
+        /**
+         * Flag for enabling and disabling testing mode.
+         */
         private boolean enabled = false;
+        /**
+         * Defines successful or unsuccessful validation result, can be changed during tests.
+         */
         private boolean successResult = true;
+        /**
+         * Fixed errors in validation result, can be changed during tests.
+         */
         private List<ErrorCode> resultErrorCodes = new ArrayList<>();
 
         public boolean isEnabled() {

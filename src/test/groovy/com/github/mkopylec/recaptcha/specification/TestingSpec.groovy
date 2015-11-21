@@ -64,7 +64,7 @@ class TestingSpec extends BasicSpec {
     }
 
     private void resetRecaptchaProperties() {
-        recaptcha.testing.resultErrorCodes = [MISSING_USER_CAPTCHA_RESPONSE]
+        recaptcha.testing.resultErrorCodes = []
         recaptcha.testing.successResult = true
     }
 }
