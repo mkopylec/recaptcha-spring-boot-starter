@@ -13,7 +13,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 dependencies {
-    compile 'com.github.mkopylec:recaptcha-spring-boot-starter:1.0.0'
+    compile 'com.github.mkopylec:recaptcha-spring-boot-starter:1.1.0'
 }
 ```
 
