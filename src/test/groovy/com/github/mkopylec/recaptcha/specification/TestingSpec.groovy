@@ -35,6 +35,7 @@ class TestingSpec extends BasicSpec {
     def "Should unsuccessfully validate reCAPTCHA when result is set to failure"() {
         given:
         recaptcha.testing.successResult = false
+        recaptcha.testing.resultErrorCodes = [MISSING_USER_CAPTCHA_RESPONSE]
 
         when:
         def response = POST '/testTesting/validate', ValidationResult
