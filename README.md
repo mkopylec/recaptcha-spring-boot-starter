@@ -6,7 +6,7 @@ To get them go to the [reCAPTCHA Home Page](https://www.google.com/recaptcha/int
 
 ## Installing
 
-```groovy
+```gradle
 repositories {
     maven { url 'https://jitpack.io' }
 }
@@ -77,7 +77,7 @@ spring.recaptcha.validation.secretKey: <your_secret_key>
 #### Spring Security web application usage:
 Add Spring Security dependency:
 
-```groovy
+```gradle
 dependencies {
     compile group: 'org.springframework.boot:spring-boot-starter-security:1.3.0.RELEASE'
 }
