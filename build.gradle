@@ -4,9 +4,12 @@ plugins {
     id 'jacoco'
     id 'nebula.optional-base' version '3.0.3'
     id 'com.github.kt3k.coveralls' version '2.3.1'
+    id 'maven'
+    id 'signing'
 }
 
 group 'com.github.mkopylec'
+archivesBaseName = name
 version '1.1.0'
 
 sourceCompatibility = 1.7
@@ -36,18 +39,73 @@ configurations {
     all*.exclude group: 'org.mortbay.jetty', module: 'servlet-api'
 }
 
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
 task sourceJar(type: Jar) {
-    from sourceSets.main.allJava
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourceJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'reCAPTCHA Spring Boot Starter'
+                packaging 'jar'
+                description 'Spring Boot starter for Google\'s reCAPTCHA'
+                url 'https://github.com/mkopylec/recaptcha-spring-boot-starter'
+
+                scm {
+                    connection 'scm:git:https://github.com/mkopylec/recaptcha-spring-boot-starter.git'
+                    developerConnection 'scm:git:https://github.com/mkopylec/recaptcha-spring-boot-starter.git'
+                    url 'https://github.com/mkopylec/recaptcha-spring-boot-starter'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'mkopylec'
+                        name 'Mariusz Kopylec'
+                        email 'mariusz.kopylec@o2.pl'
+                    }
+                }
+            }
+        }
+    }
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-
-            artifact sourceJar {
-                classifier "sources"
-            }
+            artifact sourceJar
         }
     }
 }
@@ -58,3 +116,4 @@ jacocoTestReport {
         html.enabled = true
     }
 }
+
