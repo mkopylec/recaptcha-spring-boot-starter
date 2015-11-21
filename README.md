@@ -74,6 +74,9 @@ Set your secret key in _application.yml_ file:
 spring.recaptcha.validation.secretKey: <your_secret_key>
 ```
 
+##### Additional info
+`RecaptchaValidator` provides couple of useful methods to validate reCAPTCHA response.
+
 #### Spring Security web application usage:
 Add Spring Security dependency:
 
@@ -143,9 +146,9 @@ spring.recaptcha.validation.secretKey: <your_secret_key>
 ```
 
 ##### Additional info
-The `RecaptchaAuthenticationFilter` must be fired on the **same URI** as the **login POST** request is processed.
-You can customize the filter URIs using `spring.recaptcha.security.securedPaths` property.
-When user enters wrong reCAPTCHA response he will be redirect to _/login?recaptchaError_.
+The `RecaptchaAuthenticationFilter` must be fired on the **same URL** as the **login POST** request is processed.
+The default filter URL is _/login_ but you can customize it using `spring.recaptcha.security.loginProcessingUrl` property.
+When user enters wrong reCAPTCHA response he will be redirected to `spring.recaptcha.security.loginProcessingUrl` _recaptchaError_ query parameter by default.
 You can customize the failure redirect using `spring.recaptcha.security.failureUrl` property.
 
 #### Testing mode
