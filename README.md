@@ -71,7 +71,7 @@ public class MainController {
 Set your secret key in _application.yml_ file:
 
 ```yaml
-spring.recaptcha.validation.secretKey: <your_secret_key>
+recaptcha.validation.secretKey: <your_secret_key>
 ```
 
 ##### Additional info
@@ -142,26 +142,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 Set your secret key in _application.yml_ file:
 
 ```yaml
-spring.recaptcha.validation.secretKey: <your_secret_key>
+recaptcha.validation.secretKey: <your_secret_key>
 ```
 
 ##### Additional info
 The `RecaptchaAuthenticationFilter` must be fired on the **same URL** as the **login POST** request is processed.
-The default filter URL is _/login_ but you can customize it using `spring.recaptcha.security.loginProcessingUrl` property.
-When user enters wrong reCAPTCHA response he will be redirected to `spring.recaptcha.security.loginProcessingUrl` with _recaptchaError_ query parameter by default.
-You can customize the failure redirect using `spring.recaptcha.security.failureUrl` property.
+The default filter URL is _/login_ but you can customize it using `recaptcha.security.loginProcessingUrl` property.
+When user enters wrong reCAPTCHA response he will be redirected to `recaptcha.security.loginProcessingUrl` with _recaptchaError_ query parameter by default.
+You can customize the failure redirect using `recaptcha.security.failureUrl` property.
 
 ### Integration testing mode usage
 Enable testing mode:
 
 ```yaml
-spring.recaptcha.testing.enabled: true
+recaptcha.testing.enabled: true
 ```
 
 Configure testing mode:
 
 ```yaml
-spring.recaptcha.testing:
+recaptcha.testing:
     successResult: false
     resultErrorCodes: INVALID_SECRET_KEY, INVALID_USER_CAPTCHA_RESPONSE
 ```
@@ -172,7 +172,7 @@ In testing mode no remote reCAPTCHA validation is fired, the validation process 
 ## Configuration properties list
 
 ```yaml
-spring.recaptcha:
+recaptcha:
     validation:
         secretKey: # reCAPTCHA secret key
         responseParameter: g-recaptcha-response # User reCAPTCHA response HTTP request parameter

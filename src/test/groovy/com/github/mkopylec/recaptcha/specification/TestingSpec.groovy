@@ -11,7 +11,7 @@ import static com.github.mkopylec.recaptcha.validation.ErrorCode.INVALID_USER_CA
 import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_USER_CAPTCHA_RESPONSE
 import static org.springframework.http.HttpStatus.OK
 
-@TestPropertySource(properties = ['spring.recaptcha.testing.enabled: true'])
+@TestPropertySource(properties = ['recaptcha.testing.enabled: true'])
 class TestingSpec extends BasicSpec {
 
     @Autowired

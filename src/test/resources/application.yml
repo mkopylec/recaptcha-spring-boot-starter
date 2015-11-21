@@ -1,5 +1,4 @@
-spring.recaptcha:
-  validation.verificationUrl: http://localhost:8081/recaptcha/api/siteverify
+recaptcha.validation.verificationUrl: http://localhost:8081/recaptcha/api/siteverify
 
 security:
   ignored: /testValidation/**, /testTesting/**

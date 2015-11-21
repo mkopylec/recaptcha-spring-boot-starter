@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration("recaptchaValidationConfiguration")
 @EnableConfigurationProperties(RecaptchaProperties.class)
-@ConditionalOnProperty(name = "spring.recaptcha.testing.enabled", havingValue = "false", matchIfMissing = true)
+@ConditionalOnProperty(name = "recaptcha.testing.enabled", havingValue = "false", matchIfMissing = true)
 public class ValidationConfiguration {
 
     @Autowired

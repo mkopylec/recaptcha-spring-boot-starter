@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration("recaptchaTestingConfiguration")
 @EnableConfigurationProperties(RecaptchaProperties.class)
-@ConditionalOnProperty(name = "spring.recaptcha.testing.enabled")
+@ConditionalOnProperty(name = "recaptcha.testing.enabled")
 public class TestingConfiguration {
 
     @Autowired

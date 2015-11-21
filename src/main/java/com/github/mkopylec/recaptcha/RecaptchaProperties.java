@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.ArrayList;
 import java.util.List;
 
-@ConfigurationProperties("spring.recaptcha")
+@ConfigurationProperties("recaptcha")
 public class RecaptchaProperties {
 
     private Validation validation = new Validation();
