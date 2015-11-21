@@ -159,12 +159,13 @@ spring.recaptcha.testing.enabled: true
 Configure testing mode:
 
 ```yaml
-spring.recaptcha.testing.successResult: true
-spring.recaptcha.testing.resultErrorCodes: INVALID_SECRET_KEY, INVALID_USER_CAPTCHA_RESPONSE
+spring.recaptcha.testing:
+    successResult: true
+    resultErrorCodes: INVALID_SECRET_KEY, INVALID_USER_CAPTCHA_RESPONSE
 ```
 
 ##### Additional info
-In testing mode na remote reCAPTCHA validation is fired, the validation process is offline.
+In testing mode no remote reCAPTCHA validation is fired, the validation process is offline.
 
 ## Configuration properties list
 
