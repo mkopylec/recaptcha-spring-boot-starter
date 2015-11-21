@@ -160,7 +160,7 @@ Configure testing mode:
 
 ```yaml
 spring.recaptcha.testing:
-    successResult: true
+    successResult: false
     resultErrorCodes: INVALID_SECRET_KEY, INVALID_USER_CAPTCHA_RESPONSE
 ```
 
