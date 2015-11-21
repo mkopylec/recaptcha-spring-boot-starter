@@ -57,11 +57,9 @@ public class MainController {
     private RecaptchaValidator recaptchaValidator;
 
     @RequestMapping(value = "/", method = POST)
-    public String validateCaptcha(HttpServletRequest request) {
+    public void validateCaptcha(HttpServletRequest request) {
         ValidationResult result = recaptchaValidator.validate(request);
         if (result.isSuccess()) {
-            ...
-        } else {
             ...
         }
     }
