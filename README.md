@@ -178,7 +178,8 @@ recaptcha:
         responseParameter: g-recaptcha-response # HTTP request parameter name containing user reCAPTCHA response.
         verificationUrl: https://www.google.com/recaptcha/api/siteverify # reCAPTCHA validation endpoint
     security:
-        loginProcessingUrl: /login # Login form processing URL from Spring Security configuration
+        loginPage: /login # Login page URL from your Spring Security configuration.
+        loginProcessingUrl: /login # Login form processing URL from your Spring Security configuration
         failureUrl: # Fixed URL to redirect to when reCAPTCHA validation fails
     testing:
         enabled: false # Flag for enabling and disabling testing mode

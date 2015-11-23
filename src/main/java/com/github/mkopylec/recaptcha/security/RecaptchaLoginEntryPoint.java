@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
+//TODO remove this class?
 public class RecaptchaLoginEntryPoint extends LoginUrlAuthenticationEntryPoint {
 
     public static final String SHOW_RECAPTCHA_QUERY_PARAM = "showRecaptcha";
@@ -25,11 +26,16 @@ public class RecaptchaLoginEntryPoint extends LoginUrlAuthenticationEntryPoint {
     @Override
     protected String determineUrlToUseForThisRequest(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
         String loginUrl = super.determineUrlToUseForThisRequest(request, response, exception);
-        if (failuresManager.getLoginFailuresCount() > security.getLoginFailuresThreshold()) {
+        getUsername(request);
+        if (failuresManager.isRecaptchaRequired()) {
             loginUrl = fromUriString(loginUrl)
                     .queryParam(SHOW_RECAPTCHA_QUERY_PARAM)
                     .toUriString();
         }
         return loginUrl;
+    }
+
+    private String getUsername(HttpServletRequest request) {
+        return request.getParameter(security.getUsernameParameter());
     }
 }

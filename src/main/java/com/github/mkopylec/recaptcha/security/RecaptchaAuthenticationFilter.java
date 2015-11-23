@@ -4,6 +4,7 @@ import com.github.mkopylec.recaptcha.RecaptchaProperties;
 import com.github.mkopylec.recaptcha.RecaptchaProperties.Security;
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
 import com.github.mkopylec.recaptcha.validation.ValidationResult;
+import org.slf4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -17,6 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_CAPTCHA_RESPONSE_PARAMETER;
+import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_USERNAME_REQUEST_PARAMETER;
+import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_USER_CAPTCHA_RESPONSE;
+import static java.util.Collections.singletonList;
+import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.util.Assert.notNull;
 import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
@@ -25,6 +31,8 @@ public class RecaptchaAuthenticationFilter extends AbstractAuthenticationProcess
 
     public static final String RECAPTCHA_ERROR_QUERY_PARAM = "recaptchaError";
     public static final String RECAPTCHA_AUTHENTICATION_PRINCIPAL = "reCAPTCHA";
+
+    private static final Logger log = getLogger(RecaptchaAuthenticationFilter.class);
 
     protected final RecaptchaValidator recaptchaValidator;
     protected final RecaptchaProperties recaptcha;
@@ -35,32 +43,51 @@ public class RecaptchaAuthenticationFilter extends AbstractAuthenticationProcess
         this.recaptchaValidator = recaptchaValidator;
         this.recaptcha = recaptcha;
         this.failuresManager = failuresManager;
-        setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(resolveFailureUrl(recaptcha.getSecurity())));
+        setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler() {
+
+            @Override
+            public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+                super.onAuthenticationFailure(request, response, exception);
+                //todo redirect with ?showRecaptcha when error code is MISSING_CAPTCHA_RESPONSE_PARAMETER
+            }
+        });
         setContinueChainBeforeSuccessfulAuthentication(true);
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        String username = getUsername(request);
+        if (username == null) {
+            throw new RecaptchaAuthenticationException(singletonList(MISSING_USERNAME_REQUEST_PARAMETER));
+        }
         Authentication authentication = new PreAuthenticatedAuthenticationToken(RECAPTCHA_AUTHENTICATION_PRINCIPAL, null);
-        if (noRecaptchaResponse(request)) {
-            return authentication;
+        if (failuresManager.isRecaptchaRequired(username)) {
+            log.debug("reCAPTCHA required for username: {}", username);
+            if (hasNoRecaptchaResponse(request)) {
+                throw new RecaptchaAuthenticationException(singletonList(MISSING_CAPTCHA_RESPONSE_PARAMETER));
+            }
+            ValidationResult result = recaptchaValidator.validate(request);
+            if (result.isSuccess()) {
+                authentication.setAuthenticated(true);
+                return authentication;
+            }
+            throw new RecaptchaAuthenticationException(result.getErrorCodes());
         }
-        ValidationResult result = recaptchaValidator.validate(request);
-        if (result.isSuccess()) {
-            authentication.setAuthenticated(true);
-            return authentication;
-        }
-        throw new RecaptchaAuthenticationException(result.getErrorCodes());
+        return authentication;
     }
 
     @Override
     public void afterPropertiesSet() {
         notNull(recaptchaValidator, "Missing recaptcha validator");
+        notNull(recaptcha, "Missing recaptcha configuration properties");
+        notNull(failuresManager, "Missing login failure manager");
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        failuresManager.resetLoginFailures();
+        String username = getUsername(request);
+        log.debug("Clearing login failures for username: {}", username);
+        failuresManager.resetLoginFailures(username);
     }
 
     private String resolveFailureUrl(Security recaptcha) {
@@ -72,7 +99,11 @@ public class RecaptchaAuthenticationFilter extends AbstractAuthenticationProcess
                 .toUriString();
     }
 
-    private boolean noRecaptchaResponse(HttpServletRequest request) {
+    private String getUsername(HttpServletRequest request) {
+        return request.getParameter(recaptcha.getSecurity().getUsernameParameter());
+    }
+
+    private boolean hasNoRecaptchaResponse(HttpServletRequest request) {
         return !request.getParameterMap().containsKey(recaptcha.getValidation().getResponseParameter());
     }
 }

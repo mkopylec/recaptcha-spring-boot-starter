@@ -8,11 +8,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Configuration("recaptchaSecurityConfiguration")
 @ConditionalOnClass({EnableWebSecurity.class, AbstractAuthenticationProcessingFilter.class})
@@ -21,9 +18,6 @@ public class SecurityConfiguration {
 
     @Autowired
     private RecaptchaProperties recaptcha;
-    @Lazy
-    @Autowired
-    private HttpServletRequest request;
 
     @Bean
     @ConditionalOnMissingBean
@@ -34,7 +28,7 @@ public class SecurityConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public LoginFailuresManager loginFailuresManager() {
-        return new SessionLoginFailuresManager(request);
+        return new InMemoryLoginFailuresManager(recaptcha.getSecurity());
     }
 
     @Bean
@@ -46,6 +40,6 @@ public class SecurityConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public LoginFailuresCountingHandler loginFailuresCountingHandler(LoginFailuresManager failuresManager) {
-        return new LoginFailuresCountingHandler(failuresManager);
+        return new LoginFailuresCountingHandler(failuresManager, security);
     }
 }

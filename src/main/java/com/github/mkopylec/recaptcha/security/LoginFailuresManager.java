@@ -1,10 +1,22 @@
 package com.github.mkopylec.recaptcha.security;
 
-public interface LoginFailuresManager {
+import com.github.mkopylec.recaptcha.RecaptchaProperties.Security;
 
-    void addLoginFailure();
+public abstract class LoginFailuresManager {
 
-    int getLoginFailuresCount();
+    protected final Security security;
 
-    void resetLoginFailures();
+    public LoginFailuresManager(Security security) {
+        this.security = security;
+    }
+
+    public abstract void addLoginFailure(String username);
+
+    public abstract int getLoginFailuresCount(String username);
+
+    public abstract void resetLoginFailures(String username);
+
+    public boolean isRecaptchaRequired(String username) {
+        return getLoginFailuresCount(username) >= security.getLoginFailuresThreshold();
+    }
 }
