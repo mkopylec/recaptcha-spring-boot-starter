@@ -28,11 +28,13 @@ public class RecaptchaAuthenticationFilter extends AbstractAuthenticationProcess
 
     protected final RecaptchaValidator recaptchaValidator;
     protected final RecaptchaProperties recaptcha;
+    protected final LoginFailuresManager failuresManager;
 
-    public RecaptchaAuthenticationFilter(RecaptchaValidator recaptchaValidator, RecaptchaProperties recaptcha) {
+    public RecaptchaAuthenticationFilter(RecaptchaValidator recaptchaValidator, RecaptchaProperties recaptcha, LoginFailuresManager failuresManager) {
         super(new AntPathRequestMatcher(recaptcha.getSecurity().getLoginProcessingUrl(), POST.toString()));
         this.recaptchaValidator = recaptchaValidator;
         this.recaptcha = recaptcha;
+        this.failuresManager = failuresManager;
         setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(resolveFailureUrl(recaptcha.getSecurity())));
         setContinueChainBeforeSuccessfulAuthentication(true);
     }
@@ -56,6 +58,11 @@ public class RecaptchaAuthenticationFilter extends AbstractAuthenticationProcess
         notNull(recaptchaValidator, "Missing recaptcha validator");
     }
 
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        failuresManager.resetLoginFailures();
+    }
+
     private String resolveFailureUrl(Security recaptcha) {
         if (recaptcha.getFailureUrl() != null) {
             return recaptcha.getFailureUrl();
@@ -67,9 +74,5 @@ public class RecaptchaAuthenticationFilter extends AbstractAuthenticationProcess
 
     private boolean noRecaptchaResponse(HttpServletRequest request) {
         return !request.getParameterMap().containsKey(recaptcha.getValidation().getResponseParameter());
-    }
-
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
     }
 }

@@ -96,9 +96,17 @@ public class RecaptchaProperties {
          */
         private String failureUrl;
         /**
+         * Login page URL from Spring Security configuration.
+         */
+        private String loginPage = "/login";
+        /**
          * Login form processing URL from Spring Security configuration.
          */
         private String loginProcessingUrl = "/login";
+        /**
+         * Number of allowed login failures before reCAPTCHA must be displayed.
+         */
+        private int loginFailuresThreshold = 5;
 
         public String getFailureUrl() {
             return failureUrl;
@@ -108,12 +116,28 @@ public class RecaptchaProperties {
             this.failureUrl = failureUrl;
         }
 
+        public String getLoginPage() {
+            return loginPage;
+        }
+
+        public void setLoginPage(String loginPage) {
+            this.loginPage = loginPage;
+        }
+
         public String getLoginProcessingUrl() {
             return loginProcessingUrl;
         }
 
         public void setLoginProcessingUrl(String loginProcessingUrl) {
             this.loginProcessingUrl = loginProcessingUrl;
+        }
+
+        public int getLoginFailuresThreshold() {
+            return loginFailuresThreshold;
+        }
+
+        public void setLoginFailuresThreshold(int loginFailuresThreshold) {
+            this.loginFailuresThreshold = loginFailuresThreshold;
         }
     }
 
