@@ -5,6 +5,7 @@ plugins {
     id 'nebula.optional-base' version '3.0.3'
     id 'com.github.kt3k.coveralls' version '2.3.1'
     id 'maven'
+    id 'signing'
 }
 
 group 'com.github.mkopylec'
@@ -52,6 +53,12 @@ artifacts {
     archives javadocJar, sourceJar
 }
 
+signing {
+    if (project.ext.has('signArtifacts')) {
+        sign configurations.archives
+    }
+}
+
 ext {
     ossrhUsername = project.ext.has('ossrhUsername') ? project.ext.ossrhUsername : ''
     ossrhPassword = project.ext.has('ossrhPassword') ? project.ext.ossrhPassword : ''
@@ -60,6 +67,7 @@ ext {
 uploadArchives {
     repositories {
         mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                 authentication(userName: ossrhUsername, password: ossrhPassword)
             }
