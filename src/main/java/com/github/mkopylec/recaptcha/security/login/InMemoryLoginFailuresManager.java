@@ -1,4 +1,4 @@
-package com.github.mkopylec.recaptcha.security;
+package com.github.mkopylec.recaptcha.security.login;
 
 import com.github.mkopylec.recaptcha.RecaptchaProperties.Security;
 
@@ -15,8 +15,7 @@ public class InMemoryLoginFailuresManager extends LoginFailuresManager {
 
     @Override
     public void addLoginFailure(String username) {
-        int loginFailuresCount = loginFailures.get(username) == null ? 1 : loginFailures.get(username);
-        loginFailures.put(username, ++loginFailuresCount);
+        loginFailures.put(username, getLoginFailuresCount(username) + 1);
     }
 
     @Override

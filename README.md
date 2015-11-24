@@ -148,7 +148,7 @@ recaptcha.validation.secretKey: <your_secret_key>
 ##### Additional info
 The `RecaptchaAuthenticationFilter` must be fired on the **same URL** as the **login POST** request is processed.
 The default filter URL is _/login_ but you can customize it using `recaptcha.security.loginProcessingUrl` property.
-When user enters wrong reCAPTCHA response he will be redirected to `recaptcha.security.loginProcessingUrl` with _recaptchaError_ query parameter by default.
+When user enters wrong reCAPTCHA response he will be redirected to `recaptcha.security.loginPage` with _recaptchaError_ query parameter by default.
 You can customize the failure redirect using `recaptcha.security.failureUrl` property.
 
 ### Integration testing mode usage

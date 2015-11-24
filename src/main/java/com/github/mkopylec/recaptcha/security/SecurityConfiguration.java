@@ -1,6 +1,11 @@
 package com.github.mkopylec.recaptcha.security;
 
 import com.github.mkopylec.recaptcha.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.security.login.CredentialLoginFailuresCountingHandler;
+import com.github.mkopylec.recaptcha.security.login.InMemoryLoginFailuresManager;
+import com.github.mkopylec.recaptcha.security.login.LoginFailuresClearingHandler;
+import com.github.mkopylec.recaptcha.security.login.LoginFailuresManager;
+import com.github.mkopylec.recaptcha.security.login.RecaptchaLoginFailuresCountingHandler;
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -21,8 +26,10 @@ public class SecurityConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RecaptchaAuthenticationFilter recaptchaAuthenticationFilter(RecaptchaValidator recaptchaValidator, LoginFailuresManager failuresManager) {
-        return new RecaptchaAuthenticationFilter(recaptchaValidator, recaptcha, failuresManager);
+    public RecaptchaAuthenticationFilter recaptchaAuthenticationFilter(
+            RecaptchaValidator recaptchaValidator, LoginFailuresManager failuresManager, RecaptchaLoginFailuresCountingHandler failureHandler
+    ) {
+        return new RecaptchaAuthenticationFilter(recaptchaValidator, recaptcha, failuresManager, failureHandler);
     }
 
     @Bean
@@ -33,13 +40,19 @@ public class SecurityConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RecaptchaLoginEntryPoint recaptchaLoginEntryPoint(LoginFailuresManager failuresManager) {
-        return new RecaptchaLoginEntryPoint(failuresManager, recaptcha.getSecurity());
+    public CredentialLoginFailuresCountingHandler credentialLoginFailuresCountingHandler(LoginFailuresManager failuresManager) {
+        return new CredentialLoginFailuresCountingHandler(failuresManager, recaptcha.getSecurity());
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public LoginFailuresCountingHandler loginFailuresCountingHandler(LoginFailuresManager failuresManager) {
-        return new LoginFailuresCountingHandler(failuresManager, security);
+    public RecaptchaLoginFailuresCountingHandler recaptchaFailuresCountingHandler(LoginFailuresManager failuresManager) {
+        return new RecaptchaLoginFailuresCountingHandler(failuresManager, recaptcha.getSecurity());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public LoginFailuresClearingHandler loginFailuresClearingHandler(LoginFailuresManager failuresManager) {
+        return new LoginFailuresClearingHandler(failuresManager, recaptcha.getSecurity());
     }
 }

@@ -1,4 +1,4 @@
-package com.github.mkopylec.recaptcha.security;
+package com.github.mkopylec.recaptcha.security.login;
 
 import com.github.mkopylec.recaptcha.RecaptchaProperties.Security;
 

@@ -1,4 +1,4 @@
-package com.github.mkopylec.recaptcha.security;
+package com.github.mkopylec.recaptcha.security.login;
 
 import com.github.mkopylec.recaptcha.RecaptchaProperties.Security;
 import org.slf4j.Logger;
@@ -11,17 +11,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
-public class LoginFailuresCountingHandler extends SimpleUrlAuthenticationFailureHandler {
+public abstract class LoginFailuresCountingHandler extends SimpleUrlAuthenticationFailureHandler {
 
     private static final Logger log = getLogger(LoginFailuresCountingHandler.class);
 
     protected final LoginFailuresManager failuresManager;
     protected final Security security;
+    protected final String queryParameter;
 
-    public LoginFailuresCountingHandler(LoginFailuresManager failuresManager, Security security) {
+    public LoginFailuresCountingHandler(LoginFailuresManager failuresManager, Security security, String queryParameter) {
         this.failuresManager = failuresManager;
         this.security = security;
+        this.queryParameter = queryParameter;
+        setDefaultFailureUrl(resolveFailureUrl(security));
+        setRedirectStrategy(new RecaptchaAwareRedirectStrategy(failuresManager, security));
     }
 
     @Override
@@ -36,7 +41,16 @@ public class LoginFailuresCountingHandler extends SimpleUrlAuthenticationFailure
         super.onAuthenticationFailure(request, response, exception);
     }
 
-    private String getUsername(HttpServletRequest request) {
+    protected String resolveFailureUrl(Security recaptcha) {
+        if (recaptcha.getFailureUrl() != null) {
+            return recaptcha.getFailureUrl();
+        }
+        return fromUriString(recaptcha.getLoginProcessingUrl())
+                .queryParam(queryParameter)
+                .toUriString();
+    }
+
+    protected String getUsername(HttpServletRequest request) {
         return request.getParameter(security.getUsernameParameter());
     }
 }

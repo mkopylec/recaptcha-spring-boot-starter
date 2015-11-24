@@ -10,7 +10,7 @@ plugins {
 
 group 'com.github.mkopylec'
 archivesBaseName = name
-version '1.1.0'
+version '1.2.0'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
