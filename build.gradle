@@ -94,6 +94,8 @@ uploadArchives {
     }
 }
 
+uploadArchives.dependsOn test
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
