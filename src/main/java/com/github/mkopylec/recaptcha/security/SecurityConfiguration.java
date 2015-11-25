@@ -52,11 +52,11 @@ public class SecurityConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public LoginFailuresClearingHandler loginFailuresClearingHandler(LoginFailuresManager failuresManager) {
-        return new LoginFailuresClearingHandler(failuresManager, recaptcha);
+        return new LoginFailuresClearingHandler(failuresManager);
     }
 
     @Bean
     public RecaptchaAwareRedirectStrategy recaptchaAwareRedirectStrategy(LoginFailuresManager failuresManager) {
-        return new RecaptchaAwareRedirectStrategy(failuresManager, recaptcha);
+        return new RecaptchaAwareRedirectStrategy(failuresManager);
     }
 }

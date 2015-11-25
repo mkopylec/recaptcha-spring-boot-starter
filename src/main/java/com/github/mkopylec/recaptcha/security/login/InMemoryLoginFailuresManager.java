@@ -1,11 +1,17 @@
 package com.github.mkopylec.recaptcha.security.login;
 
 import com.github.mkopylec.recaptcha.RecaptchaProperties;
+import org.slf4j.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class InMemoryLoginFailuresManager extends LoginFailuresManager {
+
+    private static final Logger log = getLogger(InMemoryLoginFailuresManager.class);
 
     protected final ConcurrentMap<String, Integer> loginFailures = new ConcurrentHashMap<>();
 
@@ -14,17 +20,24 @@ public class InMemoryLoginFailuresManager extends LoginFailuresManager {
     }
 
     @Override
-    public void addLoginFailure(String username) {
-        loginFailures.put(username, getLoginFailuresCount(username) + 1);
+    public void addLoginFailure(HttpServletRequest request) {
+        String username = getUsername(request);
+        log.debug("Adding login failure for username: {}", username);
+        loginFailures.put(username, getLoginFailuresCount(request) + 1);
     }
 
     @Override
-    public int getLoginFailuresCount(String username) {
-        return loginFailures.get(username) == null ? 0 : loginFailures.get(username);
+    public int getLoginFailuresCount(HttpServletRequest request) {
+        String username = getUsername(request);
+        int count = loginFailures.get(username) == null ? 0 : loginFailures.get(username);
+        log.debug("Getting login failures count: {} for username: {}", count, username);
+        return count;
     }
 
     @Override
-    public void resetLoginFailures(String username) {
+    public void clearLoginFailures(HttpServletRequest request) {
+        String username = getUsername(request);
+        log.debug("Clearing login failures for username: {}", username);
         loginFailures.remove(username);
     }
 }

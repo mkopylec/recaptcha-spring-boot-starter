@@ -1,6 +1,7 @@
 package com.github.mkopylec.recaptcha.security;
 
 import com.github.mkopylec.recaptcha.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.RecaptchaProperties.Validation;
 import com.github.mkopylec.recaptcha.security.login.LoginFailuresClearingHandler;
 import com.github.mkopylec.recaptcha.security.login.LoginFailuresCountingHandler;
 import com.github.mkopylec.recaptcha.security.login.LoginFailuresManager;
@@ -27,7 +28,7 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
     private static final Logger log = getLogger(RecaptchaAuthenticationFilter.class);
 
     protected final RecaptchaValidator recaptchaValidator;
-    protected final RecaptchaProperties recaptcha;
+    protected final Validation validation;
     protected final LoginFailuresManager failuresManager;
 
     public RecaptchaAuthenticationFilter(
@@ -36,7 +37,7 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
             LoginFailuresManager failuresManager
     ) {
         this.recaptchaValidator = recaptchaValidator;
-        this.recaptcha = recaptcha;
+        validation = recaptcha.getValidation();
         this.failuresManager = failuresManager;
     }
 
@@ -45,7 +46,7 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
         if (getUsernameParameter() == null) {
             throw new RecaptchaAuthenticationException(singletonList(MISSING_USERNAME_REQUEST_PARAMETER));
         }
-        if (failuresManager.isRecaptchaRequired(getUsernameParameter())) {
+        if (failuresManager.isRecaptchaRequired(request)) {
             log.debug("reCAPTCHA required for username: {}", getUsernameParameter());
             if (hasNoRecaptchaResponse(request)) {
                 throw new RecaptchaAuthenticationException(singletonList(MISSING_CAPTCHA_RESPONSE_PARAMETER));
@@ -63,9 +64,7 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
         if (!LoginFailuresClearingHandler.class.isAssignableFrom(successHandler.getClass())) {
             throw new IllegalArgumentException("Invalid login success handler. " + successHandler + " must be instance of " + LoginFailuresClearingHandler.class.getName());
         }
-        LoginFailuresClearingHandler handler = (LoginFailuresClearingHandler) successHandler;
-        handler.setUsernameParameter(getUsernameParameter());
-        super.setAuthenticationSuccessHandler(handler);
+        super.setAuthenticationSuccessHandler(successHandler);
     }
 
     @Override
@@ -73,19 +72,23 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
         if (!LoginFailuresCountingHandler.class.isAssignableFrom(failureHandler.getClass())) {
             throw new IllegalArgumentException("Invalid login failure handler. " + failureHandler + " must be instance of " + LoginFailuresCountingHandler.class.getName());
         }
-        LoginFailuresCountingHandler handler = (LoginFailuresCountingHandler) failureHandler;
-        handler.setUsernameParameter(getUsernameParameter());
-        super.setAuthenticationFailureHandler(handler);
+        super.setAuthenticationFailureHandler(failureHandler);
+    }
+
+    @Override
+    public void setUsernameParameter(String usernameParameter) {
+        super.setUsernameParameter(usernameParameter);
+        failuresManager.setUsernameParameter(usernameParameter);
     }
 
     @Override
     public void afterPropertiesSet() {
         notNull(recaptchaValidator, "Missing recaptcha validator");
-        notNull(recaptcha, "Missing recaptcha configuration properties");
+        notNull(validation, "Missing recaptcha configuration properties");
         notNull(failuresManager, "Missing login failure manager");
     }
 
     protected boolean hasNoRecaptchaResponse(HttpServletRequest request) {
-        return !request.getParameterMap().containsKey(recaptcha.getValidation().getResponseParameter());
+        return !request.getParameterMap().containsKey(validation.getResponseParameter());
     }
 }

@@ -1,7 +1,5 @@
 package com.github.mkopylec.recaptcha.security.login;
 
-import com.github.mkopylec.recaptcha.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.RecaptchaProperties.Security;
 import com.github.mkopylec.recaptcha.security.RecaptchaAuthenticationException;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -20,12 +18,9 @@ public class RecaptchaAwareRedirectStrategy extends DefaultRedirectStrategy {
     public static final String SHOW_RECAPTCHA_QUERY_PARAM = "showRecaptcha";
 
     protected final LoginFailuresManager failuresManager;
-    protected final Security security;
-    protected String usernameParameter;
 
-    public RecaptchaAwareRedirectStrategy(LoginFailuresManager failuresManager, RecaptchaProperties recaptcha) {
+    public RecaptchaAwareRedirectStrategy(LoginFailuresManager failuresManager) {
         this.failuresManager = failuresManager;
-        security = recaptcha.getSecurity();
     }
 
     @Override
@@ -37,20 +32,9 @@ public class RecaptchaAwareRedirectStrategy extends DefaultRedirectStrategy {
         } else {
             urlBuilder.queryParam(ERROR_PARAMETER_NAME);
         }
-        if (failuresManager.isRecaptchaRequired(getUsername(request))) {
+        if (failuresManager.isRecaptchaRequired(request)) {
             urlBuilder.queryParam(SHOW_RECAPTCHA_QUERY_PARAM);
         }
         super.sendRedirect(request, response, urlBuilder.toUriString());
-    }
-
-    public void setUsernameParameter(String usernameParameter) {
-        this.usernameParameter = usernameParameter;
-    }
-
-    protected String getUsername(HttpServletRequest request) {
-        if (usernameParameter == null) {
-            throw new IllegalStateException("Missing username parameter");
-        }
-        return request.getParameter(usernameParameter);
     }
 }
