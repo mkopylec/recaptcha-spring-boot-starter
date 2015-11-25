@@ -1,6 +1,7 @@
 package com.github.mkopylec.recaptcha.security;
 
 import com.github.mkopylec.recaptcha.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.security.login.FormLoginConfigurerEnhancer;
 import com.github.mkopylec.recaptcha.security.login.InMemoryLoginFailuresManager;
 import com.github.mkopylec.recaptcha.security.login.LoginFailuresClearingHandler;
 import com.github.mkopylec.recaptcha.security.login.LoginFailuresCountingHandler;
@@ -23,6 +24,12 @@ public class SecurityConfiguration {
 
     @Autowired
     private RecaptchaProperties recaptcha;
+
+    @Bean
+    @ConditionalOnMissingBean
+    public FormLoginConfigurerEnhancer formLoginConfigurerEnhancer(RecaptchaAuthenticationFilter authenticationFilter) {
+        return new FormLoginConfigurerEnhancer(authenticationFilter);
+    }
 
     @Bean
     @ConditionalOnMissingBean
