@@ -20,6 +20,6 @@ public class TestingConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public RecaptchaValidator userResponseValidator() {
-        return new TestRecaptchaValidator(recaptcha.getTesting());
+        return new TestRecaptchaValidator(recaptcha);
     }
 }
