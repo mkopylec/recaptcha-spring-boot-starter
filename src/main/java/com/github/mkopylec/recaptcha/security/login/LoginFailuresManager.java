@@ -27,7 +27,7 @@ public abstract class LoginFailuresManager {
 
     public boolean isRecaptchaRequired(HttpServletRequest request) {
         boolean recaptchaRequired = getLoginFailuresCount(request) >= security.getLoginFailuresThreshold();
-        log.debug("Checking is reCAPTCHA required for username: {}, result: {}", getUsername(request), recaptchaRequired);
+        log.debug("Done checking is reCAPTCHA required for username: {}, result: {}", getUsername(request), recaptchaRequired);
         return recaptchaRequired;
     }
 
