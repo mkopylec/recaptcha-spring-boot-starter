@@ -51,12 +51,12 @@ public class LoginFailuresCountingHandler extends SimpleUrlAuthenticationFailure
 
     @Override
     public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
-        if (RecaptchaAwareRedirectStrategy.class.isAssignableFrom(redirectStrategy.getClass())) {
-            RecaptchaAwareRedirectStrategy strategy = (RecaptchaAwareRedirectStrategy) redirectStrategy;
-            strategy.setUsernameParameter(usernameParameter);
-            super.setRedirectStrategy(strategy);
+        if (!RecaptchaAwareRedirectStrategy.class.isAssignableFrom(redirectStrategy.getClass())) {
+            throw new IllegalArgumentException("Invalid redirect strategy. " + redirectStrategy + " must be instance of " + RecaptchaAwareRedirectStrategy.class.getName());
         }
-        throw new IllegalArgumentException("Invalid redirect strategy. " + redirectStrategy + " must be instance of " + RecaptchaAwareRedirectStrategy.class.getName());
+        RecaptchaAwareRedirectStrategy strategy = (RecaptchaAwareRedirectStrategy) redirectStrategy;
+        strategy.setUsernameParameter(usernameParameter);
+        super.setRedirectStrategy(strategy);
     }
 
     protected String getUsername(HttpServletRequest request) {

@@ -64,22 +64,22 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
 
     @Override
     public void setAuthenticationSuccessHandler(AuthenticationSuccessHandler successHandler) {
-        if (LoginFailuresClearingHandler.class.isAssignableFrom(successHandler.getClass())) {
-            LoginFailuresClearingHandler handler = (LoginFailuresClearingHandler) successHandler;
-            handler.setUsernameParameter(getUsernameParameter());
-            super.setAuthenticationSuccessHandler(handler);
+        if (!LoginFailuresClearingHandler.class.isAssignableFrom(successHandler.getClass())) {
+            throw new IllegalArgumentException("Invalid login success handler. " + successHandler + " must be instance of " + LoginFailuresClearingHandler.class.getName());
         }
-        throw new IllegalArgumentException("Invalid login success handler. " + successHandler + " must be instance of " + LoginFailuresClearingHandler.class.getName());
+        LoginFailuresClearingHandler handler = (LoginFailuresClearingHandler) successHandler;
+        handler.setUsernameParameter(getUsernameParameter());
+        super.setAuthenticationSuccessHandler(handler);
     }
 
     @Override
     public void setAuthenticationFailureHandler(AuthenticationFailureHandler failureHandler) {
-        if (LoginFailuresCountingHandler.class.isAssignableFrom(failureHandler.getClass())) {
-            LoginFailuresCountingHandler handler = (LoginFailuresCountingHandler) failureHandler;
-            handler.setUsernameParameter(getUsernameParameter());
-            super.setAuthenticationFailureHandler(handler);
+        if (!LoginFailuresCountingHandler.class.isAssignableFrom(failureHandler.getClass())) {
+            throw new IllegalArgumentException("Invalid login failure handler. " + failureHandler + " must be instance of " + LoginFailuresCountingHandler.class.getName());
         }
-        throw new IllegalArgumentException("Invalid login failure handler. " + failureHandler + " must be instance of " + LoginFailuresCountingHandler.class.getName());
+        LoginFailuresCountingHandler handler = (LoginFailuresCountingHandler) failureHandler;
+        handler.setUsernameParameter(getUsernameParameter());
+        super.setAuthenticationFailureHandler(handler);
     }
 
     @Override
