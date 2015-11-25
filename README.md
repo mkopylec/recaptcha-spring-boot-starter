@@ -1,7 +1,7 @@
 # reCAPTCHA Spring Boot Starter
 [![Build Status](https://travis-ci.org/mkopylec/recaptcha-spring-boot-starter.svg?branch=master)](https://travis-ci.org/mkopylec/recaptcha-spring-boot-starter)
 [![Coverage Status](https://coveralls.io/repos/mkopylec/recaptcha-spring-boot-starter/badge.svg?branch=master&service=github)](https://coveralls.io/github/mkopylec/recaptcha-spring-boot-starter?branch=master)
-[![Release](https://img.shields.io/github/release/mkopylec/recaptcha-spring-boot-starter.svg?label=JitPack)](https://jitpack.io/#mkopylec/recaptcha-spring-boot-starter)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.mkopylec/recaptcha-spring-boot-starter/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.mkopylec/recaptcha-spring-boot-starter)
 
 To use the starter you will need a reCAPTCHA site key and a secret key.
 To get them go to the [reCAPTCHA Home Page](https://www.google.com/recaptcha/intro/index.html) and set up your reCAPTCHA.
@@ -10,7 +10,7 @@ To get them go to the [reCAPTCHA Home Page](https://www.google.com/recaptcha/int
 
 ```gradle
 repositories {
-    maven { url 'https://jitpack.io' }
+    mavenCentral()
 }
 dependencies {
     compile 'com.github.mkopylec:recaptcha-spring-boot-starter:1.1.0'
