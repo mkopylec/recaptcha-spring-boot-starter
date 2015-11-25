@@ -79,7 +79,7 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
     @Override
     public void afterPropertiesSet() {
         notNull(recaptchaValidator, "Missing recaptcha validator");
-        notNull(validation, "Missing recaptcha configuration properties");
+        notNull(validation, "Missing recaptcha validation configuration properties");
         notNull(failuresManager, "Missing login failure manager");
     }
 
