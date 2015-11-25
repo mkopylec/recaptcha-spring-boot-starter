@@ -27,16 +27,14 @@ public class SecurityConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public FormLoginConfigurerEnhancer formLoginConfigurerEnhancer(RecaptchaAuthenticationFilter authenticationFilter) {
-        return new FormLoginConfigurerEnhancer(authenticationFilter);
+    public FormLoginConfigurerEnhancer formLoginConfigurerEnhancer(RecaptchaAuthenticationFilter authenticationFilter, LoginFailuresClearingHandler successHandler, LoginFailuresCountingHandler failureHandler) {
+        return new FormLoginConfigurerEnhancer(authenticationFilter, successHandler, failureHandler);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public RecaptchaAuthenticationFilter recaptchaAuthenticationFilter(
-            RecaptchaValidator recaptchaValidator, LoginFailuresManager failuresManager, LoginFailuresCountingHandler failureHandler, LoginFailuresClearingHandler successHandler
-    ) {
-        return new RecaptchaAuthenticationFilter(recaptchaValidator, recaptcha, failuresManager, failureHandler, successHandler);
+    public RecaptchaAuthenticationFilter recaptchaAuthenticationFilter(RecaptchaValidator recaptchaValidator, LoginFailuresManager failuresManager) {
+        return new RecaptchaAuthenticationFilter(recaptchaValidator, recaptcha, failuresManager);
     }
 
     @Bean

@@ -33,15 +33,11 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
     public RecaptchaAuthenticationFilter(
             RecaptchaValidator recaptchaValidator,
             RecaptchaProperties recaptcha,
-            LoginFailuresManager failuresManager,
-            LoginFailuresCountingHandler failureHandler,
-            LoginFailuresClearingHandler successHandler
+            LoginFailuresManager failuresManager
     ) {
         this.recaptchaValidator = recaptchaValidator;
         this.recaptcha = recaptcha;
         this.failuresManager = failuresManager;
-        setAuthenticationFailureHandler(failureHandler);
-        setAuthenticationSuccessHandler(successHandler);
     }
 
     @Override

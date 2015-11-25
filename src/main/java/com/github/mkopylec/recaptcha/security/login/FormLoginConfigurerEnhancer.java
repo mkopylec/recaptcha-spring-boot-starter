@@ -16,15 +16,19 @@ public class FormLoginConfigurerEnhancer {
     protected static final String AUTHENTICATION_PROCESSING_FILTER_FIELD = "authFilter";
 
     protected final RecaptchaAuthenticationFilter authenticationFilter;
+    protected final LoginFailuresClearingHandler successHandler;
+    protected final LoginFailuresCountingHandler failureHandler;
 
-    public FormLoginConfigurerEnhancer(RecaptchaAuthenticationFilter authenticationFilter) {
+    public FormLoginConfigurerEnhancer(RecaptchaAuthenticationFilter authenticationFilter, LoginFailuresClearingHandler successHandler, LoginFailuresCountingHandler failureHandler) {
         this.authenticationFilter = authenticationFilter;
+        this.successHandler = successHandler;
+        this.failureHandler = failureHandler;
     }
 
     public FormLoginConfigurer<HttpSecurity> addRecaptchaSupport(FormLoginConfigurer<HttpSecurity> loginConfigurer) {
         Field authFilterField = findField(loginConfigurer.getClass(), AUTHENTICATION_PROCESSING_FILTER_FIELD, AbstractAuthenticationProcessingFilter.class);
         makeAccessible(authFilterField);
         setField(authFilterField, loginConfigurer, authenticationFilter);
-        return loginConfigurer;
+        return loginConfigurer.successHandler(successHandler).failureHandler(failureHandler);
     }
 }
