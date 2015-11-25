@@ -14,7 +14,7 @@ public class TestRecaptchaValidator extends RecaptchaValidator {
     protected final Testing testing;
 
     public TestRecaptchaValidator(RecaptchaProperties recaptcha) {
-        super(null, null);
+        super(null, recaptcha);
         testing = recaptcha.getTesting();
     }
 
