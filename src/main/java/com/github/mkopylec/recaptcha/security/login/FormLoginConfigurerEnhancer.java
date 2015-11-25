@@ -13,6 +13,7 @@ import static org.springframework.util.ReflectionUtils.setField;
 
 public class FormLoginConfigurerEnhancer {
 
+    public static final String DEFAULT_USERNAME_PARAMETER = "username";
     protected static final String AUTHENTICATION_PROCESSING_FILTER_FIELD = "authFilter";
 
     protected final RecaptchaAuthenticationFilter authenticationFilter;
@@ -29,6 +30,8 @@ public class FormLoginConfigurerEnhancer {
         Field authFilterField = findField(loginConfigurer.getClass(), AUTHENTICATION_PROCESSING_FILTER_FIELD, AbstractAuthenticationProcessingFilter.class);
         makeAccessible(authFilterField);
         setField(authFilterField, loginConfigurer, authenticationFilter);
-        return loginConfigurer.successHandler(successHandler).failureHandler(failureHandler);
+        return loginConfigurer.usernameParameter(DEFAULT_USERNAME_PARAMETER)
+                .successHandler(successHandler)
+                .failureHandler(failureHandler);
     }
 }
