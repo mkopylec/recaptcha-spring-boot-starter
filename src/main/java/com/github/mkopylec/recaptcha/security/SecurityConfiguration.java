@@ -56,6 +56,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public RecaptchaAwareRedirectStrategy recaptchaAwareRedirectStrategy(LoginFailuresManager failuresManager) {
         return new RecaptchaAwareRedirectStrategy(failuresManager);
     }
