@@ -1,8 +1,10 @@
 package com.github.mkopylec.recaptcha.security.login;
 
+import com.github.mkopylec.recaptcha.RecaptchaProperties;
 import com.github.mkopylec.recaptcha.RecaptchaProperties.Security;
 import org.slf4j.Logger;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 import javax.servlet.ServletException;
@@ -11,22 +13,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
-import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
-public abstract class LoginFailuresCountingHandler extends SimpleUrlAuthenticationFailureHandler {
+public class LoginFailuresCountingHandler extends SimpleUrlAuthenticationFailureHandler {
 
     private static final Logger log = getLogger(LoginFailuresCountingHandler.class);
 
     protected final LoginFailuresManager failuresManager;
     protected final Security security;
-    protected final String queryParameter;
+    protected String usernameParameter;
 
-    public LoginFailuresCountingHandler(LoginFailuresManager failuresManager, Security security, String queryParameter) {
+    public LoginFailuresCountingHandler(LoginFailuresManager failuresManager, RecaptchaProperties recaptcha, RecaptchaAwareRedirectStrategy redirectStrategy) {
         this.failuresManager = failuresManager;
-        this.security = security;
-        this.queryParameter = queryParameter;
-        setDefaultFailureUrl(resolveFailureUrl(security));
-        setRedirectStrategy(new RecaptchaAwareRedirectStrategy(failuresManager, security));
+        security = recaptcha.getSecurity();
+        setDefaultFailureUrl(security.getFailureUrl());
+        setRedirectStrategy(redirectStrategy);
     }
 
     @Override
@@ -41,16 +41,28 @@ public abstract class LoginFailuresCountingHandler extends SimpleUrlAuthenticati
         super.onAuthenticationFailure(request, response, exception);
     }
 
-    protected String resolveFailureUrl(Security recaptcha) {
-        if (recaptcha.getFailureUrl() != null) {
-            return recaptcha.getFailureUrl();
+    public void setUsernameParameter(String usernameParameter) {
+        this.usernameParameter = usernameParameter;
+        RecaptchaAwareRedirectStrategy redirectStrategy = (RecaptchaAwareRedirectStrategy) getRedirectStrategy();
+        if (redirectStrategy != null) {
+            redirectStrategy.setUsernameParameter(usernameParameter);
         }
-        return fromUriString(recaptcha.getLoginProcessingUrl())
-                .queryParam(queryParameter)
-                .toUriString();
+    }
+
+    @Override
+    public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
+        if (redirectStrategy instanceof RecaptchaAwareRedirectStrategy) {
+            RecaptchaAwareRedirectStrategy strategy = (RecaptchaAwareRedirectStrategy) redirectStrategy;
+            strategy.setUsernameParameter(usernameParameter);
+            super.setRedirectStrategy(strategy);
+        }
+        throw new IllegalArgumentException("Invalid redirect strategy. " + redirectStrategy + " must be instance of " + RecaptchaAwareRedirectStrategy.class.getName());
     }
 
     protected String getUsername(HttpServletRequest request) {
-        return request.getParameter(security.getUsernameParameter());
+        if (usernameParameter == null) {
+            throw new IllegalStateException("Missing username parameter");
+        }
+        return request.getParameter(usernameParameter);
     }
 }

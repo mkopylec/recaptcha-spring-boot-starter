@@ -1,5 +1,6 @@
 package com.github.mkopylec.recaptcha.security.login;
 
+import com.github.mkopylec.recaptcha.RecaptchaProperties;
 import com.github.mkopylec.recaptcha.RecaptchaProperties.Security;
 import org.slf4j.Logger;
 import org.springframework.security.core.Authentication;
@@ -18,10 +19,11 @@ public class LoginFailuresClearingHandler extends SavedRequestAwareAuthenticatio
 
     protected final LoginFailuresManager failuresManager;
     protected final Security security;
+    protected String usernameParameter;
 
-    public LoginFailuresClearingHandler(LoginFailuresManager failuresManager, Security security) {
+    public LoginFailuresClearingHandler(LoginFailuresManager failuresManager, RecaptchaProperties recaptcha) {
         this.failuresManager = failuresManager;
-        this.security = security;
+        security = recaptcha.getSecurity();
     }
 
     @Override
@@ -32,7 +34,14 @@ public class LoginFailuresClearingHandler extends SavedRequestAwareAuthenticatio
         super.onAuthenticationSuccess(request, response, authentication);
     }
 
+    public void setUsernameParameter(String usernameParameter) {
+        this.usernameParameter = usernameParameter;
+    }
+
     protected String getUsername(HttpServletRequest request) {
-        return request.getParameter(security.getUsernameParameter());
+        if (usernameParameter == null) {
+            throw new IllegalStateException("Missing username parameter");
+        }
+        return request.getParameter(usernameParameter);
     }
 }

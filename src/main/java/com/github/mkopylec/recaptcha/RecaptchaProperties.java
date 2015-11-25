@@ -6,6 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter.DEFAULT_LOGIN_PAGE_URL;
+
 /**
  * reCAPTCHA configuration properties.
  */
@@ -94,19 +96,7 @@ public class RecaptchaProperties {
         /**
          * Fixed URL to redirect to when reCAPTCHA validation fails.
          */
-        private String failureUrl;
-        /**
-         * Login page URL from your Spring Security configuration.
-         */
-        private String loginPage = "/login";
-        /**
-         * Login form processing URL from your Spring Security configuration.
-         */
-        private String loginProcessingUrl = "/login";
-        /**
-         * Login form username parameter from your Spring Security configuration.
-         */
-        private String usernameParameter = "username";
+        private String failureUrl = DEFAULT_LOGIN_PAGE_URL;
         /**
          * Number of allowed login failures before reCAPTCHA must be displayed.
          */
@@ -118,30 +108,6 @@ public class RecaptchaProperties {
 
         public void setFailureUrl(String failureUrl) {
             this.failureUrl = failureUrl;
-        }
-
-        public String getLoginPage() {
-            return loginPage;
-        }
-
-        public void setLoginPage(String loginPage) {
-            this.loginPage = loginPage;
-        }
-
-        public String getLoginProcessingUrl() {
-            return loginProcessingUrl;
-        }
-
-        public void setLoginProcessingUrl(String loginProcessingUrl) {
-            this.loginProcessingUrl = loginProcessingUrl;
-        }
-
-        public String getUsernameParameter() {
-            return usernameParameter;
-        }
-
-        public void setUsernameParameter(String usernameParameter) {
-            this.usernameParameter = usernameParameter;
         }
 
         public int getLoginFailuresThreshold() {

@@ -1,6 +1,6 @@
 package com.github.mkopylec.recaptcha.security.login;
 
-import com.github.mkopylec.recaptcha.RecaptchaProperties.Security;
+import com.github.mkopylec.recaptcha.RecaptchaProperties;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -9,8 +9,8 @@ public class InMemoryLoginFailuresManager extends LoginFailuresManager {
 
     protected final ConcurrentMap<String, Integer> loginFailures = new ConcurrentHashMap<>();
 
-    public InMemoryLoginFailuresManager(Security security) {
-        super(security);
+    public InMemoryLoginFailuresManager(RecaptchaProperties recaptcha) {
+        super(recaptcha);
     }
 
     @Override

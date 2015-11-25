@@ -1,5 +1,6 @@
 package com.github.mkopylec.recaptcha.validation;
 
+import com.github.mkopylec.recaptcha.RecaptchaProperties;
 import com.github.mkopylec.recaptcha.RecaptchaProperties.Validation;
 import org.slf4j.Logger;
 import org.springframework.util.LinkedMultiValueMap;
@@ -16,11 +17,11 @@ public class RecaptchaValidator {
     private static final Logger log = getLogger(RecaptchaValidator.class);
 
     protected final RestTemplate restTemplate;
-    protected final Validation recaptcha;
+    protected final Validation validation;
 
-    public RecaptchaValidator(RestTemplate restTemplate, Validation recaptcha) {
+    public RecaptchaValidator(RestTemplate restTemplate, RecaptchaProperties recaptcha) {
         this.restTemplate = restTemplate;
-        this.recaptcha = recaptcha;
+        validation = recaptcha.getValidation();
     }
 
     public ValidationResult validate(HttpServletRequest request) {
@@ -28,7 +29,7 @@ public class RecaptchaValidator {
     }
 
     public ValidationResult validate(HttpServletRequest request, String ipAddress) {
-        return validate(request.getParameter(recaptcha.getResponseParameter()), ipAddress);
+        return validate(request.getParameter(validation.getResponseParameter()), ipAddress);
     }
 
     public ValidationResult validate(String userResponse) {
@@ -37,18 +38,18 @@ public class RecaptchaValidator {
 
     public ValidationResult validate(String userResponse, String ipAddress) {
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-        parameters.add("secret", recaptcha.getSecretKey());
+        parameters.add("secret", validation.getSecretKey());
         parameters.add("response", userResponse);
         parameters.add("remoteip", ipAddress);
 
-        log.debug("Validating reCAPTCHA:\n    verification url: {}\n    verification parameters: {}", recaptcha.getVerificationUrl(), parameters);
+        log.debug("Validating reCAPTCHA:\n    verification url: {}\n    verification parameters: {}", validation.getVerificationUrl(), parameters);
 
         try {
-            ValidationResult result = restTemplate.postForEntity(recaptcha.getVerificationUrl(), parameters, ValidationResult.class).getBody();
+            ValidationResult result = restTemplate.postForEntity(validation.getVerificationUrl(), parameters, ValidationResult.class).getBody();
             log.debug("reCAPTCHA validation finished: {}", result);
             return result;
         } catch (RestClientException ex) {
-            throw new RecaptchaValidationException(userResponse, recaptcha.getVerificationUrl(), ex);
+            throw new RecaptchaValidationException(userResponse, validation.getVerificationUrl(), ex);
         }
     }
 }
