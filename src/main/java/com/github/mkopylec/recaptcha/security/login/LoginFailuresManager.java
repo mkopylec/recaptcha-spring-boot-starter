@@ -2,10 +2,15 @@ package com.github.mkopylec.recaptcha.security.login;
 
 import com.github.mkopylec.recaptcha.RecaptchaProperties;
 import com.github.mkopylec.recaptcha.RecaptchaProperties.Security;
+import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public abstract class LoginFailuresManager {
+
+    private static final Logger log = getLogger(LoginFailuresManager.class);
 
     protected final Security security;
     protected String usernameParameter;
@@ -21,7 +26,9 @@ public abstract class LoginFailuresManager {
     public abstract void clearLoginFailures(HttpServletRequest request);
 
     public boolean isRecaptchaRequired(HttpServletRequest request) {
-        return getLoginFailuresCount(request) >= security.getLoginFailuresThreshold();
+        boolean recaptchaRequired = getLoginFailuresCount(request) >= security.getLoginFailuresThreshold();
+        log.debug("Checking is reCAPTCHA required for username: {}, result: {}", getUsername(request), recaptchaRequired);
+        return recaptchaRequired;
     }
 
     public void setUsernameParameter(String usernameParameter) {

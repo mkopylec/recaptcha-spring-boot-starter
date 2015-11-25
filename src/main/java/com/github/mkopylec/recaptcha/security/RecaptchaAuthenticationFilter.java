@@ -7,7 +7,6 @@ import com.github.mkopylec.recaptcha.security.login.LoginFailuresCountingHandler
 import com.github.mkopylec.recaptcha.security.login.LoginFailuresManager;
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
 import com.github.mkopylec.recaptcha.validation.ValidationResult;
-import org.slf4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -20,12 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_CAPTCHA_RESPONSE_PARAMETER;
 import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_USERNAME_REQUEST_PARAMETER;
 import static java.util.Collections.singletonList;
-import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.Assert.notNull;
 
 public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-
-    private static final Logger log = getLogger(RecaptchaAuthenticationFilter.class);
 
     protected final RecaptchaValidator recaptchaValidator;
     protected final Validation validation;
@@ -47,7 +43,6 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
             throw new RecaptchaAuthenticationException(singletonList(MISSING_USERNAME_REQUEST_PARAMETER));
         }
         if (failuresManager.isRecaptchaRequired(request)) {
-            log.debug("reCAPTCHA required for username: {}", getUsernameParameter());
             if (hasNoRecaptchaResponse(request)) {
                 throw new RecaptchaAuthenticationException(singletonList(MISSING_CAPTCHA_RESPONSE_PARAMETER));
             }
