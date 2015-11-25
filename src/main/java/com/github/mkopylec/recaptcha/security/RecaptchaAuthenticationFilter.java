@@ -57,7 +57,7 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
     @Override
     public void setAuthenticationSuccessHandler(AuthenticationSuccessHandler successHandler) {
         if (!LoginFailuresClearingHandler.class.isAssignableFrom(successHandler.getClass())) {
-            throw new IllegalArgumentException("Invalid login success handler. " + successHandler + " must be instance of " + LoginFailuresClearingHandler.class.getName());
+            throw new IllegalArgumentException("Invalid login success handler. Handler must be an instance of " + LoginFailuresClearingHandler.class.getName() + " but is " + successHandler);
         }
         super.setAuthenticationSuccessHandler(successHandler);
     }
@@ -65,7 +65,7 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
     @Override
     public void setAuthenticationFailureHandler(AuthenticationFailureHandler failureHandler) {
         if (!LoginFailuresCountingHandler.class.isAssignableFrom(failureHandler.getClass())) {
-            throw new IllegalArgumentException("Invalid login failure handler. " + failureHandler + " must be instance of " + LoginFailuresCountingHandler.class.getName());
+            throw new IllegalArgumentException("Invalid login failure handler. Handler must be an instance of " + LoginFailuresCountingHandler.class.getName() + " but is " + failureHandler);
         }
         super.setAuthenticationFailureHandler(failureHandler);
     }
