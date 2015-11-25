@@ -64,7 +64,7 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
 
     @Override
     public void setAuthenticationSuccessHandler(AuthenticationSuccessHandler successHandler) {
-        if (successHandler instanceof LoginFailuresClearingHandler) {
+        if (LoginFailuresClearingHandler.class.isAssignableFrom(successHandler.getClass())) {
             LoginFailuresClearingHandler handler = (LoginFailuresClearingHandler) successHandler;
             handler.setUsernameParameter(getUsernameParameter());
             super.setAuthenticationSuccessHandler(handler);
@@ -74,7 +74,7 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
 
     @Override
     public void setAuthenticationFailureHandler(AuthenticationFailureHandler failureHandler) {
-        if (failureHandler instanceof LoginFailuresCountingHandler) {
+        if (LoginFailuresCountingHandler.class.isAssignableFrom(failureHandler.getClass())) {
             LoginFailuresCountingHandler handler = (LoginFailuresCountingHandler) failureHandler;
             handler.setUsernameParameter(getUsernameParameter());
             super.setAuthenticationFailureHandler(handler);
