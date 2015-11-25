@@ -26,10 +26,7 @@ public class RecaptchaAwareRedirectStrategy extends DefaultRedirectStrategy {
     @Override
     public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
         UriComponentsBuilder urlBuilder = fromUriString(url);
-        Object exception = request.getSession(false).getAttribute(AUTHENTICATION_EXCEPTION);
-        if (exception == null) {
-            throw new IllegalStateException("Missing " + AUTHENTICATION_EXCEPTION + " session attribute");
-        }
+        Object exception = getAuthenticationException(request);
         if (exception instanceof RecaptchaAuthenticationException) {
             urlBuilder.queryParam(RECAPTCHA_ERROR_PARAMETER_NAME);
         } else {
@@ -39,5 +36,16 @@ public class RecaptchaAwareRedirectStrategy extends DefaultRedirectStrategy {
             urlBuilder.queryParam(SHOW_RECAPTCHA_QUERY_PARAM);
         }
         super.sendRedirect(request, response, urlBuilder.toUriString());
+    }
+
+    private Object getAuthenticationException(HttpServletRequest request) {
+        Object exception = request.getSession(false).getAttribute(AUTHENTICATION_EXCEPTION);
+        if (exception == null) {
+            exception = request.getAttribute(AUTHENTICATION_EXCEPTION);
+        }
+        if (exception == null) {
+            throw new IllegalStateException("Missing " + AUTHENTICATION_EXCEPTION + " session or request attribute");
+        }
+        return exception;
     }
 }
