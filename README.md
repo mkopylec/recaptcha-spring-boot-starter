@@ -140,7 +140,6 @@ Create custom login failures manager bean by extending `LoginFailuresManager`:
 
 ```java
 import com.github.mkopylec.recaptcha.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.security.login.InMemoryLoginFailuresManager;
 import com.github.mkopylec.recaptcha.security.login.LoginFailuresManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
