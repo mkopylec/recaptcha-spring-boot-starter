@@ -171,8 +171,8 @@ After adding reCAPTCHA support to form login configuration you can only add `Aut
 `LoginFailuresClearingHandler` and `AuthenticationFailureHandler` that extends `LoginFailuresCountingHandler`.
 
 There can be 4 different query parameters in redirect to login page:
- - _error_ - user has entered invalid credentials
- - _recaptchaError_ - user has entered invalid reCAPTCHA response
+ - _error_ - credentials authentication error
+ - _recaptchaError_ - reCAPTCHA authentication error
  - _showRecaptcha_ - reCAPTCHA must be displayed on login page
  - _logout_ - user has been successfully logged out
 
