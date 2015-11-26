@@ -136,7 +136,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 }
 ```
 
-Create custom `LoginFailuresManager`:
+Create custom login failures manager by extending `LoginFailuresManager`:
 
 ```java
 import com.github.mkopylec.recaptcha.RecaptchaProperties;
