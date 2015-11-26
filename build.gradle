@@ -103,10 +103,6 @@ uploadArchives {
     }
 }
 
-compileJava.dependsOn clean
-release.dependsOn test
-uploadArchives.dependsOn release
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
