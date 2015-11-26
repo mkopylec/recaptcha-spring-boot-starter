@@ -103,7 +103,7 @@ uploadArchives {
     }
 }
 
-test.dependsOn clean
+compileJava.dependsOn clean
 release.dependsOn test
 uploadArchives.dependsOn release
 
