@@ -1,4 +1,6 @@
-recaptcha.validation.verificationUrl: http://localhost:8081/recaptcha/api/siteverify
+recaptcha:
+  validation.verificationUrl: http://localhost:8081/recaptcha/api/siteverify
+  security.loginFailuresThreshold: 3
 
 security:
   ignored: /testValidation/**, /testTesting/**

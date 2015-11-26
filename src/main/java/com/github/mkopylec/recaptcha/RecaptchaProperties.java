@@ -6,6 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter.DEFAULT_LOGIN_PAGE_URL;
+
 /**
  * reCAPTCHA configuration properties.
  */
@@ -92,13 +94,13 @@ public class RecaptchaProperties {
     public static class Security {
 
         /**
-         * Fixed URL to redirect to when reCAPTCHA validation fails.
+         * URL to redirect to when user authentication fails.
          */
-        private String failureUrl;
+        private String failureUrl = DEFAULT_LOGIN_PAGE_URL;
         /**
-         * Login form processing URL from Spring Security configuration.
+         * Number of allowed login failures before reCAPTCHA must be displayed.
          */
-        private String loginProcessingUrl = "/login";
+        private int loginFailuresThreshold = 5;
 
         public String getFailureUrl() {
             return failureUrl;
@@ -108,12 +110,12 @@ public class RecaptchaProperties {
             this.failureUrl = failureUrl;
         }
 
-        public String getLoginProcessingUrl() {
-            return loginProcessingUrl;
+        public int getLoginFailuresThreshold() {
+            return loginFailuresThreshold;
         }
 
-        public void setLoginProcessingUrl(String loginProcessingUrl) {
-            this.loginProcessingUrl = loginProcessingUrl;
+        public void setLoginFailuresThreshold(int loginFailuresThreshold) {
+            this.loginFailuresThreshold = loginFailuresThreshold;
         }
     }
 

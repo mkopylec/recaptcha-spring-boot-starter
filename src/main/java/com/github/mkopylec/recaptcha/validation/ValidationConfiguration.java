@@ -20,7 +20,7 @@ public class ValidationConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public RecaptchaValidator userResponseValidator(RestTemplate restTemplate) {
-        return new RecaptchaValidator(restTemplate, recaptcha.getValidation());
+        return new RecaptchaValidator(restTemplate, recaptcha);
     }
 
     @Bean

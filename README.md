@@ -13,7 +13,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'com.github.mkopylec:recaptcha-spring-boot-starter:1.1.0'
+    compile 'com.github.mkopylec:recaptcha-spring-boot-starter:1.2.0'
 }
 ```
 
@@ -40,7 +40,7 @@ Embed reCAPTCHA in HTML web page:
 </html>
 ```
 
-Inject `RecaptchaValidator` into your controller:
+Inject `RecaptchaValidator` into your controller and validate user reCAPTCHA response:
 
 ```java
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
@@ -99,7 +99,7 @@ Embed reCAPTCHA in HTML **login** web page:
 <form action="/login" method="post">
     User: <input name="username" type="text" value="" />
     Password: <input name="password" type="password" value="" />
-    <!--<if condition>-->
+    <!--<if request has 'showRecaptcha' query param>-->
     <div class="g-recaptcha" data-sitekey="<your_site_key>"></div>
     <!--</if>-->
     <input type="submit" value="Log in" />
@@ -109,32 +109,54 @@ Embed reCAPTCHA in HTML **login** web page:
 </html>
 ```
 
-Add `RecaptchaAuthenticationFilter` **before** `UsernamePasswordAuthenticationFilter` in your security configuration
+Add reCAPTCHA support to your form login security configuration using `FormLoginConfigurerEnhancer`.
 
 ```java
-import com.github.mkopylec.recaptcha.security.RecaptchaAuthenticationFilter;
+import com.github.mkopylec.recaptcha.security.login.FormLoginConfigurerEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private RecaptchaAuthenticationFilter authenticationFilter;
+    private FormLoginConfigurerEnhancer enhancer;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .formLogin().loginPage("/login")
+        enhancer.addRecaptchaSupport(http.formLogin()).loginPage("/login")
                 .and()
-                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .csrf().disable()
                 ...
+    }
+}
+```
+
+Create custom login failures manager bean by extending `LoginFailuresManager`:
+
+```java
+import com.github.mkopylec.recaptcha.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.security.login.InMemoryLoginFailuresManager;
+import com.github.mkopylec.recaptcha.security.login.LoginFailuresManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@EnableConfigurationProperties(RecaptchaProperties.class)
+public class LoginFailuresConfiguration {
+
+    @Autowired
+    private RecaptchaProperties recaptcha;
+
+    @Bean
+    public LoginFailuresManager loginFailuresManager() {
+        return new CustomLoginFailuresManager(recaptcha);
     }
 }
 ```
@@ -146,10 +168,17 @@ recaptcha.validation.secretKey: <your_secret_key>
 ```
 
 ##### Additional info
-The `RecaptchaAuthenticationFilter` must be fired on the **same URL** as the **login POST** request is processed.
-The default filter URL is _/login_ but you can customize it using `recaptcha.security.loginProcessingUrl` property.
-When user enters wrong reCAPTCHA response he will be redirected to `recaptcha.security.loginProcessingUrl` with _recaptchaError_ query parameter by default.
-You can customize the failure redirect using `recaptcha.security.failureUrl` property.
+After adding reCAPTCHA support to form login configuration you can only add `AuthenticationSuccessHandler` that extends
+`LoginFailuresClearingHandler` and `AuthenticationFailureHandler` that extends `LoginFailuresCountingHandler`.
+
+There can be 4 different query parameters in redirect to login page:
+ - _error_ - user has entered invalid credentials
+ - _recaptchaError_ - user has entered invalid reCAPTCHA response
+ - _showRecaptcha_ - reCAPTCHA must be displayed on login page
+ - _logout_ - user has been successfully logged out
+
+There is a default `LoginFailuresManager` implementation in the starter which is `InMemoryLoginFailuresManager`.
+It is strongly recommended to create your own `LoginFailuresManager` implementation and not to use the default one.
 
 ### Integration testing mode usage
 Enable testing mode:
@@ -174,16 +203,16 @@ In testing mode no remote reCAPTCHA validation is fired, the validation process 
 ```yaml
 recaptcha:
     validation:
-        secretKey: # reCAPTCHA secret key
+        secretKey: # reCAPTCHA secret key.
         responseParameter: g-recaptcha-response # HTTP request parameter name containing user reCAPTCHA response.
-        verificationUrl: https://www.google.com/recaptcha/api/siteverify # reCAPTCHA validation endpoint
+        verificationUrl: https://www.google.com/recaptcha/api/siteverify # reCAPTCHA validation endpoint.
     security:
-        loginProcessingUrl: /login # Login form processing URL from Spring Security configuration
-        failureUrl: # Fixed URL to redirect to when reCAPTCHA validation fails
+        failureUrl: /login # URL to redirect to when user authentication fails.
+        loginFailuresThreshold: 5 # Number of allowed login failures before reCAPTCHA must be displayed.
     testing:
-        enabled: false # Flag for enabling and disabling testing mode
-        successResult: true # Defines successful or unsuccessful validation result, can be changed during tests
-        resultErrorCodes: # Errors in validation result, can be changed during tests
+        enabled: false # Flag for enabling and disabling testing mode.
+        successResult: true # Defines successful or unsuccessful validation result, can be changed during tests.
+        resultErrorCodes: # Errors in validation result, can be changed during tests.
 ```
 
 ## Examples

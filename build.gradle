@@ -6,11 +6,12 @@ plugins {
     id 'com.github.kt3k.coveralls' version '2.3.1'
     id 'maven'
     id 'signing'
+    id 'pl.allegro.tech.build.axion-release' version '1.3.3'
 }
 
 group 'com.github.mkopylec'
 archivesBaseName = name
-version '1.1.0'
+version scmVersion.version
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -102,7 +103,9 @@ uploadArchives {
     }
 }
 
-uploadArchives.dependsOn test
+compileJava.dependsOn clean
+release.dependsOn test
+uploadArchives.dependsOn release
 
 publishing {
     publications {

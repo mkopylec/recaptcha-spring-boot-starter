@@ -1,5 +1,6 @@
 package com.github.mkopylec.recaptcha.testing;
 
+import com.github.mkopylec.recaptcha.RecaptchaProperties;
 import com.github.mkopylec.recaptcha.RecaptchaProperties.Testing;
 import com.github.mkopylec.recaptcha.validation.ErrorCode;
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
@@ -12,9 +13,9 @@ public class TestRecaptchaValidator extends RecaptchaValidator {
 
     protected final Testing testing;
 
-    public TestRecaptchaValidator(Testing testing) {
-        super(null, null);
-        this.testing = testing;
+    public TestRecaptchaValidator(RecaptchaProperties recaptcha) {
+        super(null, recaptcha);
+        testing = recaptcha.getTesting();
     }
 
     @Override

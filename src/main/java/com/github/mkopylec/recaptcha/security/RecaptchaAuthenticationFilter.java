@@ -1,75 +1,89 @@
 package com.github.mkopylec.recaptcha.security;
 
 import com.github.mkopylec.recaptcha.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.RecaptchaProperties.Security;
+import com.github.mkopylec.recaptcha.RecaptchaProperties.Validation;
+import com.github.mkopylec.recaptcha.security.login.LoginFailuresClearingHandler;
+import com.github.mkopylec.recaptcha.security.login.LoginFailuresCountingHandler;
+import com.github.mkopylec.recaptcha.security.login.LoginFailuresManager;
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
 import com.github.mkopylec.recaptcha.validation.ValidationResult;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
-import static org.springframework.http.HttpMethod.POST;
+import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_CAPTCHA_RESPONSE_PARAMETER;
+import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_USERNAME_REQUEST_PARAMETER;
+import static java.util.Collections.singletonList;
 import static org.springframework.util.Assert.notNull;
-import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
-public class RecaptchaAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-
-    public static final String RECAPTCHA_ERROR_QUERY_PARAM = "recaptchaError";
-    public static final String RECAPTCHA_AUTHENTICATION_PRINCIPAL = "reCAPTCHA";
+public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     protected final RecaptchaValidator recaptchaValidator;
-    protected final RecaptchaProperties recaptcha;
+    protected final Validation validation;
+    protected final LoginFailuresManager failuresManager;
 
-    public RecaptchaAuthenticationFilter(RecaptchaValidator recaptchaValidator, RecaptchaProperties recaptcha) {
-        super(new AntPathRequestMatcher(recaptcha.getSecurity().getLoginProcessingUrl(), POST.toString()));
+    public RecaptchaAuthenticationFilter(
+            RecaptchaValidator recaptchaValidator,
+            RecaptchaProperties recaptcha,
+            LoginFailuresManager failuresManager
+    ) {
         this.recaptchaValidator = recaptchaValidator;
-        this.recaptcha = recaptcha;
-        setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(resolveFailureUrl(recaptcha.getSecurity())));
-        setContinueChainBeforeSuccessfulAuthentication(true);
+        validation = recaptcha.getValidation();
+        this.failuresManager = failuresManager;
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        Authentication authentication = new PreAuthenticatedAuthenticationToken(RECAPTCHA_AUTHENTICATION_PRINCIPAL, null);
-        if (noRecaptchaResponse(request)) {
-            return authentication;
+        if (getUsernameParameter() == null) {
+            throw new RecaptchaAuthenticationException(singletonList(MISSING_USERNAME_REQUEST_PARAMETER));
         }
-        ValidationResult result = recaptchaValidator.validate(request);
-        if (result.isSuccess()) {
-            authentication.setAuthenticated(true);
-            return authentication;
+        if (failuresManager.isRecaptchaRequired(request)) {
+            if (hasNoRecaptchaResponse(request)) {
+                throw new RecaptchaAuthenticationException(singletonList(MISSING_CAPTCHA_RESPONSE_PARAMETER));
+            }
+            ValidationResult result = recaptchaValidator.validate(request);
+            if (result.isFailure()) {
+                throw new RecaptchaAuthenticationException(result.getErrorCodes());
+            }
         }
-        throw new RecaptchaAuthenticationException(result.getErrorCodes());
+        return super.attemptAuthentication(request, response);
+    }
+
+    @Override
+    public void setAuthenticationSuccessHandler(AuthenticationSuccessHandler successHandler) {
+        if (!LoginFailuresClearingHandler.class.isAssignableFrom(successHandler.getClass())) {
+            throw new IllegalArgumentException("Invalid login success handler. Handler must be an instance of " + LoginFailuresClearingHandler.class.getName() + " but is " + successHandler);
+        }
+        super.setAuthenticationSuccessHandler(successHandler);
+    }
+
+    @Override
+    public void setAuthenticationFailureHandler(AuthenticationFailureHandler failureHandler) {
+        if (!LoginFailuresCountingHandler.class.isAssignableFrom(failureHandler.getClass())) {
+            throw new IllegalArgumentException("Invalid login failure handler. Handler must be an instance of " + LoginFailuresCountingHandler.class.getName() + " but is " + failureHandler);
+        }
+        super.setAuthenticationFailureHandler(failureHandler);
+    }
+
+    @Override
+    public void setUsernameParameter(String usernameParameter) {
+        super.setUsernameParameter(usernameParameter);
+        failuresManager.setUsernameParameter(usernameParameter);
     }
 
     @Override
     public void afterPropertiesSet() {
         notNull(recaptchaValidator, "Missing recaptcha validator");
+        notNull(validation, "Missing recaptcha validation configuration properties");
+        notNull(failuresManager, "Missing login failure manager");
     }
 
-    private String resolveFailureUrl(Security recaptcha) {
-        if (recaptcha.getFailureUrl() != null) {
-            return recaptcha.getFailureUrl();
-        }
-        return fromUriString(recaptcha.getLoginProcessingUrl())
-                .queryParam(RECAPTCHA_ERROR_QUERY_PARAM)
-                .toUriString();
-    }
-
-    private boolean noRecaptchaResponse(HttpServletRequest request) {
-        return !request.getParameterMap().containsKey(recaptcha.getValidation().getResponseParameter());
-    }
-
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected boolean hasNoRecaptchaResponse(HttpServletRequest request) {
+        return !request.getParameterMap().containsKey(validation.getResponseParameter());
     }
 }
