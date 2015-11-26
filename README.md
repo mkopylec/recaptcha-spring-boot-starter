@@ -40,7 +40,7 @@ Embed reCAPTCHA in HTML web page:
 </html>
 ```
 
-Inject `RecaptchaValidator` into your controller:
+Inject `RecaptchaValidator` into your controller and validate user reCAPTCHA response:
 
 ```java
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
@@ -136,6 +136,31 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 }
 ```
 
+Create custom `LoginFailuresManager`:
+
+```java
+import com.github.mkopylec.recaptcha.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.security.login.InMemoryLoginFailuresManager;
+import com.github.mkopylec.recaptcha.security.login.LoginFailuresManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@EnableConfigurationProperties(RecaptchaProperties.class)
+public class LoginFailuresConfiguration {
+
+    @Autowired
+    private RecaptchaProperties recaptcha;
+
+    @Bean
+    public LoginFailuresManager loginFailuresManager() {
+        return new CustomLoginFailuresManager(recaptcha);
+    }
+}
+```
+
 Set your secret key in _application.yml_ file:
 
 ```yaml
@@ -151,6 +176,9 @@ There can be 4 different query parameters in redirect to login page:
  - _recaptchaError_ - user has entered invalid reCAPTCHA response
  - _showRecaptcha_ - reCAPTCHA must be displayed on login page
  - _logout_ - user has been successfully logged out
+
+There is a default `LoginFailuresManager` implementation in the starter which is `InMemoryLoginFailuresManager`.
+It is strongly recommended to create your own `LoginFailuresManager` implementation and not to use the default one.
 
 ### Integration testing mode usage
 Enable testing mode:
