@@ -103,7 +103,9 @@ uploadArchives {
     }
 }
 
-uploadArchives.dependsOn test
+test.dependsOn clean
+release.dependsOn test
+uploadArchives.dependsOn release
 
 publishing {
     publications {
