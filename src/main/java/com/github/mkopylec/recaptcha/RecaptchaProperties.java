@@ -94,7 +94,7 @@ public class RecaptchaProperties {
     public static class Security {
 
         /**
-         * Fixed URL to redirect to when reCAPTCHA validation fails.
+         * URL to redirect to when user authentication fails.
          */
         private String failureUrl = DEFAULT_LOGIN_PAGE_URL;
         /**
