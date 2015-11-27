@@ -129,20 +129,7 @@ public class CustomLoginFailuresManager extends LoginFailuresManager {
         super(recaptcha);
     }
 
-    @Override
-    public void addLoginFailure(HttpServletRequest request) {
-        ...
-    }
-
-    @Override
-    public int getLoginFailuresCount(HttpServletRequest request) {
-        ...
-    }
-
-    @Override
-    public void clearLoginFailures(HttpServletRequest request) {
-        ...
-    }
+    ...
 }
 ```
 
