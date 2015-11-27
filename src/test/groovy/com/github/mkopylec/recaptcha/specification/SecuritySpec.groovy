@@ -158,6 +158,44 @@ class SecuritySpec extends BasicSpec {
         resetUserLoginFailures()
     }
 
+    def "Should log in a user and get response data when captcha validation fails because of HTTP error"() {
+        given:
+        recaptcha.validation.verificationUrl = 'http://invalid.verification.url/'
+
+        //Redirect to login page while trying to get secured data
+        when:
+        def response = POST 'testSecurity/getResponse', Object
+        then:
+        response.statusCode == FOUND
+        response.headers.get('Location') == ['http://localhost:' + port + '/login']
+
+        //Log in unsuccessfully 3 times
+        3.times {
+            when:
+            response = POST 'login', Object, ['username': 'user', 'password': 'invalid-password']
+            then:
+            response.statusCode == FOUND
+            response.headers.get('Location') == ['http://localhost:' + port + '/login' + (it == 3 ? '?showRecaptcha' : '')]
+        }
+
+        //Log in successfully with captcha
+        when:
+        response = POST 'login', Object, ['username': 'user', 'password': 'password', 'g-recaptcha-response': VALID_CAPTCHA_RESPONSE]
+        then:
+        response.statusCode == FOUND
+        response.headers.get('Location') == ['http://localhost:' + port + '/']
+
+        //Get secured while logged in
+        when:
+        response = POST 'testSecurity/getResponse', ResponseData
+        then:
+        response.statusCode == OK
+        response.body.message == RESPONSE_DATA_MESSAGE
+
+        resetUserLoginFailures()
+        resetVerificationEndpoint()
+    }
+
     private void resetUserLoginFailures() {
         stubSuccessfulRecaptchaValidation()
         recaptcha.validation.secretKey = VALID_SECRET
@@ -166,5 +204,9 @@ class SecuritySpec extends BasicSpec {
 
         assert response.statusCode == FOUND
         assert response.headers.get('Location') == ['http://localhost:' + port + '/']
+    }
+
+    private void resetVerificationEndpoint() {
+        recaptcha.validation.verificationUrl = 'http://localhost:8081/recaptcha/api/siteverify'
     }
 }

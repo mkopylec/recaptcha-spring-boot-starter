@@ -13,7 +13,8 @@ public enum ErrorCode {
 
     //Custom errors
     MISSING_USERNAME_REQUEST_PARAMETER("missing-username-request-parameter"),
-    MISSING_CAPTCHA_RESPONSE_PARAMETER("missing-captcha-response-parameter");
+    MISSING_CAPTCHA_RESPONSE_PARAMETER("missing-captcha-response-parameter"),
+    VALIDATION_HTTP_ERROR("validation-http-error");
 
     private final String text;
 

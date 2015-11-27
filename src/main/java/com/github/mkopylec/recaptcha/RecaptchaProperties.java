@@ -101,6 +101,10 @@ public class RecaptchaProperties {
          * Number of allowed login failures before reCAPTCHA must be displayed.
          */
         private int loginFailuresThreshold = 5;
+        /**
+         * Permits on denies continuing user authentication process after reCAPTCHA validation fails because of HTTP error.
+         */
+        private boolean continueOnValidationHttpError = true;
 
         public String getFailureUrl() {
             return failureUrl;
@@ -116,6 +120,14 @@ public class RecaptchaProperties {
 
         public void setLoginFailuresThreshold(int loginFailuresThreshold) {
             this.loginFailuresThreshold = loginFailuresThreshold;
+        }
+
+        public boolean isContinueOnValidationHttpError() {
+            return continueOnValidationHttpError;
+        }
+
+        public void setContinueOnValidationHttpError(boolean continueOnValidationHttpError) {
+            this.continueOnValidationHttpError = continueOnValidationHttpError;
         }
     }
 

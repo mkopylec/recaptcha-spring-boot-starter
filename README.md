@@ -208,6 +208,7 @@ recaptcha:
     security:
         failureUrl: /login # URL to redirect to when user authentication fails.
         loginFailuresThreshold: 5 # Number of allowed login failures before reCAPTCHA must be displayed.
+        continueOnValidationHttpError: true # Permits on denies continuing user authentication process after reCAPTCHA validation fails because of HTTP error.
     testing:
         enabled: false # Flag for enabling and disabling testing mode.
         successResult: true # Defines successful or unsuccessful validation result, can be changed during tests.

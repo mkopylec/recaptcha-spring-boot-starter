@@ -1,12 +1,13 @@
 package com.github.mkopylec.recaptcha.security;
 
 import com.github.mkopylec.recaptcha.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.RecaptchaProperties.Validation;
 import com.github.mkopylec.recaptcha.security.login.LoginFailuresClearingHandler;
 import com.github.mkopylec.recaptcha.security.login.LoginFailuresCountingHandler;
 import com.github.mkopylec.recaptcha.security.login.LoginFailuresManager;
+import com.github.mkopylec.recaptcha.validation.RecaptchaValidationException;
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
 import com.github.mkopylec.recaptcha.validation.ValidationResult;
+import org.slf4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -18,13 +19,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_CAPTCHA_RESPONSE_PARAMETER;
 import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_USERNAME_REQUEST_PARAMETER;
+import static com.github.mkopylec.recaptcha.validation.ErrorCode.VALIDATION_HTTP_ERROR;
 import static java.util.Collections.singletonList;
+import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.Assert.notNull;
 
 public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    private static final Logger log = getLogger(RecaptchaAuthenticationFilter.class);
+
     protected final RecaptchaValidator recaptchaValidator;
-    protected final Validation validation;
+    protected final RecaptchaProperties recaptcha;
     protected final LoginFailuresManager failuresManager;
 
     public RecaptchaAuthenticationFilter(
@@ -33,7 +38,7 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
             LoginFailuresManager failuresManager
     ) {
         this.recaptchaValidator = recaptchaValidator;
-        validation = recaptcha.getValidation();
+        this.recaptcha = recaptcha;
         this.failuresManager = failuresManager;
     }
 
@@ -46,9 +51,17 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
             if (hasNoRecaptchaResponse(request)) {
                 throw new RecaptchaAuthenticationException(singletonList(MISSING_CAPTCHA_RESPONSE_PARAMETER));
             }
-            ValidationResult result = recaptchaValidator.validate(request);
-            if (result.isFailure()) {
-                throw new RecaptchaAuthenticationException(result.getErrorCodes());
+            try {
+                ValidationResult result = recaptchaValidator.validate(request);
+                if (result.isFailure()) {
+                    throw new RecaptchaAuthenticationException(result.getErrorCodes());
+                }
+            } catch (RecaptchaValidationException ex) {
+                boolean continueAuthentication = recaptcha.getSecurity().isContinueOnValidationHttpError();
+                log.error("reCAPTCHA validation HTTP error. Continuing user authentication: " + continueAuthentication, ex);
+                if (!continueAuthentication) {
+                    throw new RecaptchaAuthenticationException(singletonList(VALIDATION_HTTP_ERROR));
+                }
             }
         }
         return super.attemptAuthentication(request, response);
@@ -79,11 +92,11 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
     @Override
     public void afterPropertiesSet() {
         notNull(recaptchaValidator, "Missing recaptcha validator");
-        notNull(validation, "Missing recaptcha validation configuration properties");
+        notNull(recaptcha, "Missing recaptcha validation configuration properties");
         notNull(failuresManager, "Missing login failure manager");
     }
 
     protected boolean hasNoRecaptchaResponse(HttpServletRequest request) {
-        return !request.getParameterMap().containsKey(validation.getResponseParameter());
+        return !request.getParameterMap().containsKey(recaptcha.getValidation().getResponseParameter());
     }
 }
