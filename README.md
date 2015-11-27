@@ -43,15 +43,6 @@ Embed reCAPTCHA in HTML web page:
 Inject `RecaptchaValidator` into your controller and validate user reCAPTCHA response:
 
 ```java
-import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpServletRequest;
-
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
 @Controller
 public class MainController {
 
@@ -112,13 +103,6 @@ Embed reCAPTCHA in HTML **login** web page:
 Add reCAPTCHA support to your form login security configuration using `FormLoginConfigurerEnhancer`.
 
 ```java
-import com.github.mkopylec.recaptcha.security.login.FormLoginConfigurerEnhancer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -139,13 +123,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 Create custom login failures manager bean by extending `LoginFailuresManager`:
 
 ```java
-import com.github.mkopylec.recaptcha.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.security.login.LoginFailuresManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+public class CustomLoginFailuresManager extends LoginFailuresManager {
 
+    public InMemoryLoginFailuresManager(RecaptchaProperties recaptcha) {
+        super(recaptcha);
+    }
+
+    @Override
+    public void addLoginFailure(HttpServletRequest request) {
+        ...
+    }
+
+    @Override
+    public int getLoginFailuresCount(HttpServletRequest request) {
+        ...
+    }
+
+    @Override
+    public void clearLoginFailures(HttpServletRequest request) {
+        ...
+    }
+}
+```
+
+```java
 @Configuration
 @EnableConfigurationProperties(RecaptchaProperties.class)
 public class LoginFailuresConfiguration {
