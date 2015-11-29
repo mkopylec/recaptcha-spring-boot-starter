@@ -125,7 +125,7 @@ Create custom login failures manager bean by extending `LoginFailuresManager`:
 ```java
 public class CustomLoginFailuresManager extends LoginFailuresManager {
 
-    public InMemoryLoginFailuresManager(RecaptchaProperties recaptcha) {
+    public CustomLoginFailuresManager(RecaptchaProperties recaptcha) {
         super(recaptcha);
     }
 
