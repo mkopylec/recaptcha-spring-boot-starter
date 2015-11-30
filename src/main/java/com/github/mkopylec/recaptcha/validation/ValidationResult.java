@@ -20,7 +20,7 @@ public class ValidationResult {
             @JsonProperty("error-codes") List<ErrorCode> errorCodes
     ) {
         this.success = success;
-        this.errorCodes = errorCodes;
+        this.errorCodes = errorCodes == null ? new ArrayList<>() : errorCodes;
     }
 
     public boolean isSuccess() {
