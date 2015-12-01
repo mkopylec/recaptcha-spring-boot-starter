@@ -123,28 +123,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 Create custom login failures manager bean by extending `LoginFailuresManager`:
 
 ```java
+@Component
+@EnableConfigurationProperties(RecaptchaProperties.class)
 public class CustomLoginFailuresManager extends LoginFailuresManager {
 
+    @Autowired
     public CustomLoginFailuresManager(RecaptchaProperties recaptcha) {
         super(recaptcha);
     }
 
     ...
-}
-```
-
-```java
-@Configuration
-@EnableConfigurationProperties(RecaptchaProperties.class)
-public class LoginFailuresConfiguration {
-
-    @Autowired
-    private RecaptchaProperties recaptcha;
-
-    @Bean
-    public LoginFailuresManager loginFailuresManager() {
-        return new CustomLoginFailuresManager(recaptcha);
-    }
 }
 ```
 
