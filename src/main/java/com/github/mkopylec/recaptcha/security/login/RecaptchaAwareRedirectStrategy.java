@@ -35,7 +35,7 @@ public class RecaptchaAwareRedirectStrategy extends DefaultRedirectStrategy {
         if (failuresManager.isRecaptchaRequired(request)) {
             urlBuilder.queryParam(SHOW_RECAPTCHA_QUERY_PARAM);
         }
-        super.sendRedirect(request, response, urlBuilder.toUriString());
+        super.sendRedirect(request, response, urlBuilder.build(true).toUriString());
     }
 
     private Object getAuthenticationException(HttpServletRequest request) {
