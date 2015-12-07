@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_CAPTCHA_RESPONSE_PARAMETER;
 import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_USERNAME_REQUEST_PARAMETER;
 import static com.github.mkopylec.recaptcha.validation.ErrorCode.VALIDATION_HTTP_ERROR;
 import static java.util.Collections.singletonList;
@@ -48,9 +47,6 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
             throw new RecaptchaAuthenticationException(singletonList(MISSING_USERNAME_REQUEST_PARAMETER));
         }
         if (failuresManager.isRecaptchaRequired(request)) {
-            if (hasNoRecaptchaResponse(request)) {
-                throw new RecaptchaAuthenticationException(singletonList(MISSING_CAPTCHA_RESPONSE_PARAMETER));
-            }
             try {
                 ValidationResult result = recaptchaValidator.validate(request);
                 if (result.isFailure()) {
@@ -94,9 +90,5 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
         notNull(recaptchaValidator, "Missing recaptcha validator");
         notNull(recaptcha, "Missing recaptcha validation configuration properties");
         notNull(failuresManager, "Missing login failure manager");
-    }
-
-    protected boolean hasNoRecaptchaResponse(HttpServletRequest request) {
-        return !request.getParameterMap().containsKey(recaptcha.getValidation().getResponseParameter());
     }
 }
