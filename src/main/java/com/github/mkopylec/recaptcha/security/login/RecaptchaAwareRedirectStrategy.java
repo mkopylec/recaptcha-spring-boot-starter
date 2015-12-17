@@ -1,6 +1,7 @@
 package com.github.mkopylec.recaptcha.security.login;
 
 import com.github.mkopylec.recaptcha.security.RecaptchaAuthenticationException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -38,7 +39,7 @@ public class RecaptchaAwareRedirectStrategy extends DefaultRedirectStrategy {
         super.sendRedirect(request, response, urlBuilder.build(true).toUriString());
     }
 
-    private Object getAuthenticationException(HttpServletRequest request) {
+    protected AuthenticationException getAuthenticationException(HttpServletRequest request) {
         Object exception = request.getSession(false).getAttribute(AUTHENTICATION_EXCEPTION);
         if (exception == null) {
             exception = request.getAttribute(AUTHENTICATION_EXCEPTION);
@@ -46,6 +47,6 @@ public class RecaptchaAwareRedirectStrategy extends DefaultRedirectStrategy {
         if (exception == null) {
             throw new IllegalStateException("Missing " + AUTHENTICATION_EXCEPTION + " session or request attribute");
         }
-        return exception;
+        return (AuthenticationException) exception;
     }
 }
