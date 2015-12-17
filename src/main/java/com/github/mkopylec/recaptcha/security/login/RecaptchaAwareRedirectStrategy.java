@@ -27,7 +27,7 @@ public class RecaptchaAwareRedirectStrategy extends DefaultRedirectStrategy {
     @Override
     public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
         UriComponentsBuilder urlBuilder = fromUriString(url);
-        Object exception = getAuthenticationException(request);
+        AuthenticationException exception = getAuthenticationException(request);
         if (exception instanceof RecaptchaAuthenticationException) {
             urlBuilder.queryParam(RECAPTCHA_ERROR_PARAMETER_NAME);
         } else {
