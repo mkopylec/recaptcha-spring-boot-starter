@@ -1,5 +1,7 @@
 package com.github.mkopylec.recaptcha
 
+import com.github.mkopylec.recaptcha.security.ResponseData
+import com.github.mkopylec.recaptcha.validation.ValidationResult
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import org.junit.Rule
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,7 +31,34 @@ abstract class BasicSpec extends Specification {
 
     private ThreadLocal<String> cookies = new ThreadLocal<>()
 
-    protected <T> ResponseEntity<T> POST(String path, Class<T> responseType, Map<String, Object> parameters = [:]) {
+    protected ResponseEntity<ValidationResult> validateRecaptcha(String userResponse) {
+        if (userResponse == null) {
+            return post('testValidation/userResponse', ValidationResult)
+        }
+        return post('testValidation/userResponse', ValidationResult, ['g-recaptcha-response': userResponse])
+    }
+
+    protected ResponseEntity<ValidationResult> validateRecaptchaWithIp(String userResponse) {
+        return post('testValidation/userResponseAndIp', ValidationResult, ['g-recaptcha-response': userResponse])
+    }
+
+    protected ResponseEntity<ValidationResult> validateRecaptchaInTestingMode() {
+        return post('testTesting/validate', ValidationResult)
+    }
+
+    protected ResponseEntity<ResponseData> getSecuredData() {
+        return post('testSecurity/getResponse', ResponseData)
+    }
+
+    protected ResponseEntity<Object> logIn(String username, String password, String recaptchaResponse = null) {
+        def params = ['username': username, 'password': password]
+        if (recaptchaResponse != null) {
+            params['g-recaptcha-response'] = recaptchaResponse
+        }
+        return post('login', Object, params)
+    }
+
+    private <T> ResponseEntity<T> post(String path, Class<T> responseType, Map<String, Object> parameters = [:]) {
         def url = "http://localhost:$port/$path"
         def params = new LinkedMultiValueMap<>()
         for (def parameter : parameters.entrySet()) {

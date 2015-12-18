@@ -2,14 +2,13 @@ package com.github.mkopylec.recaptcha.specification
 
 import com.github.mkopylec.recaptcha.BasicSpec
 import com.github.mkopylec.recaptcha.RecaptchaProperties
-import com.github.mkopylec.recaptcha.validation.ValidationResult
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.TestPropertySource
 
+import static com.github.mkopylec.recaptcha.assertions.Assertions.assertThat
 import static com.github.mkopylec.recaptcha.validation.ErrorCode.INVALID_SECRET_KEY
 import static com.github.mkopylec.recaptcha.validation.ErrorCode.INVALID_USER_CAPTCHA_RESPONSE
 import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_USER_CAPTCHA_RESPONSE
-import static org.springframework.http.HttpStatus.OK
 
 @TestPropertySource(properties = ['recaptcha.testing.enabled: true'])
 class TestingSpec extends BasicSpec {
@@ -22,13 +21,15 @@ class TestingSpec extends BasicSpec {
         recaptcha.testing.successResult = true
 
         when:
-        def response = POST '/testTesting/validate', ValidationResult
+        def response = validateRecaptchaInTestingMode()
 
         then:
-        response.statusCode == OK
-        response.body.success
-        response.body.errorCodes == []
+        assertThat(response)
+                .hasOkStatus()
+                .hasSuccessfulValidationResult()
+                .hasNoErrorCodes()
 
+        cleanup:
         resetRecaptchaProperties()
     }
 
@@ -38,13 +39,15 @@ class TestingSpec extends BasicSpec {
         recaptcha.testing.resultErrorCodes = [MISSING_USER_CAPTCHA_RESPONSE]
 
         when:
-        def response = POST '/testTesting/validate', ValidationResult
+        def response = validateRecaptchaInTestingMode()
 
         then:
-        response.statusCode == OK
-        !response.body.success
-        response.body.errorCodes == [MISSING_USER_CAPTCHA_RESPONSE]
+        assertThat(response)
+                .hasOkStatus()
+                .hasUnsuccessfulValidationResult()
+                .hasErrorCodes(MISSING_USER_CAPTCHA_RESPONSE)
 
+        cleanup:
         resetRecaptchaProperties()
     }
 
@@ -54,13 +57,15 @@ class TestingSpec extends BasicSpec {
         recaptcha.testing.resultErrorCodes = [INVALID_SECRET_KEY, INVALID_USER_CAPTCHA_RESPONSE]
 
         when:
-        def response = POST '/testTesting/validate', ValidationResult
+        def response = validateRecaptchaInTestingMode()
 
         then:
-        response.statusCode == OK
-        !response.body.success
-        response.body.errorCodes == [INVALID_SECRET_KEY, INVALID_USER_CAPTCHA_RESPONSE]
+        assertThat(response)
+                .hasOkStatus()
+                .hasUnsuccessfulValidationResult()
+                .hasErrorCodes(INVALID_SECRET_KEY, INVALID_USER_CAPTCHA_RESPONSE)
 
+        cleanup:
         resetRecaptchaProperties()
     }
 
