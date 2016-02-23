@@ -48,7 +48,8 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
         }
         if (failuresManager.isRecaptchaRequired(request)) {
             try {
-                ValidationResult result = recaptchaValidator.validate(request);
+                String recaptchaResponse = obtainRecaptchaResponse(request);
+                ValidationResult result = recaptchaValidator.validate(recaptchaResponse, request.getRemoteAddr());
                 if (result.isFailure()) {
                     throw new RecaptchaAuthenticationException(result.getErrorCodes());
                 }
@@ -90,5 +91,9 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
         notNull(recaptchaValidator, "Missing recaptcha validator");
         notNull(recaptcha, "Missing recaptcha validation configuration properties");
         notNull(failuresManager, "Missing login failure manager");
+    }
+
+    protected String obtainRecaptchaResponse(HttpServletRequest request) {
+        return request.getParameter(recaptcha.getValidation().getResponseParameter());
     }
 }
