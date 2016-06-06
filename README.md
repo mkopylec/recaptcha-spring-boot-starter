@@ -73,7 +73,7 @@ Add Spring Security dependency:
 
 ```gradle
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-security:1.3.2.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-security:1.3.5.RELEASE'
 }
 ```
 
