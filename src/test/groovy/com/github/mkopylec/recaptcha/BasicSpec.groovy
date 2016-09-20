@@ -22,10 +22,10 @@ import spock.lang.Specification
 abstract class BasicSpec extends Specification {
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(8081);
+    public WireMockRule wireMockRule = new WireMockRule(8081)
 
     @Shared
-    private RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate = new RestTemplate()
     @Autowired
     private EmbeddedWebApplicationContext context
 
