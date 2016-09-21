@@ -6,19 +6,18 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule
 import org.junit.Rule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext
-import org.springframework.boot.test.SpringApplicationContextLoader
-import org.springframework.boot.test.WebIntegrationTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
-import org.springframework.test.context.ContextConfiguration
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 import spock.lang.Shared
 import spock.lang.Specification
 
-@WebIntegrationTest(randomPort = true)
-@ContextConfiguration(loader = SpringApplicationContextLoader, classes = TestApplication)
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
+
+@SpringBootTest(webEnvironment = RANDOM_PORT, classes = TestApplication)
 abstract class BasicSpec extends Specification {
 
     @Rule

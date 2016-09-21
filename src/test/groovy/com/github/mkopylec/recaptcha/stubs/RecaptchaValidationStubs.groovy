@@ -1,7 +1,7 @@
 package com.github.mkopylec.recaptcha.stubs
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.tomakehurst.wiremock.client.ValueMatchingStrategy
+import com.github.tomakehurst.wiremock.matching.StringValuePattern
 
 import static com.github.mkopylec.recaptcha.Strings.INVALID_CAPTCHA_RESPONSE
 import static com.github.mkopylec.recaptcha.Strings.INVALID_SECRET
@@ -54,7 +54,7 @@ class RecaptchaValidationStubs {
         ));
     }
 
-    private static ValueMatchingStrategy nullableContaining(String param, String value) {
+    private static StringValuePattern nullableContaining(String param, String value) {
         value != null ? containing("$param=$value") : containing('')
     }
 }
