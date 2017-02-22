@@ -13,7 +13,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'com.github.mkopylec:recaptcha-spring-boot-starter:1.3.7'
+    compile 'com.github.mkopylec:recaptcha-spring-boot-starter:1.3.8'
 }
 ```
 
@@ -73,7 +73,7 @@ Add Spring Security dependency:
 
 ```gradle
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-security:1.4.0.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-security:1.5.1.RELEASE'
 }
 ```
 
