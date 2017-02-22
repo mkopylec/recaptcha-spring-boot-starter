@@ -49,7 +49,7 @@ public class MainController {
     @Autowired
     private RecaptchaValidator recaptchaValidator;
 
-    @RequestMapping(value = "/", method = POST)
+    @PostMapping("/")
     public void validateCaptcha(HttpServletRequest request) {
         ValidationResult result = recaptchaValidator.validate(request);
         if (result.isSuccess()) {
