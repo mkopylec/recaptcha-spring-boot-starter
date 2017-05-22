@@ -10,6 +10,7 @@ public enum ErrorCode {
     INVALID_SECRET_KEY("invalid-input-secret"),
     MISSING_USER_CAPTCHA_RESPONSE("missing-input-response"),
     INVALID_USER_CAPTCHA_RESPONSE("invalid-input-response"),
+    BAD_REQUEST("bad-request"),
 
     //Custom errors
     MISSING_USERNAME_REQUEST_PARAMETER("missing-username-request-parameter"),
@@ -36,12 +37,14 @@ public enum ErrorCode {
                 return MISSING_USER_CAPTCHA_RESPONSE;
             case "invalid-input-response":
                 return INVALID_USER_CAPTCHA_RESPONSE;
+            case "bad-request":
+                return BAD_REQUEST;
             case "missing-username-request-parameter":
                 return MISSING_USERNAME_REQUEST_PARAMETER;
             case "missing-captcha-response-parameter":
                 return MISSING_CAPTCHA_RESPONSE_PARAMETER;
             default:
-                throw new IllegalArgumentException("Invalid error code");
+                throw new IllegalArgumentException("Invalid error code: " + value);
         }
     }
 
