@@ -2,6 +2,9 @@ package com.github.mkopylec.recaptcha.validation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import org.slf4j.Logger;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 public enum ErrorCode {
 
@@ -11,11 +14,15 @@ public enum ErrorCode {
     MISSING_USER_CAPTCHA_RESPONSE("missing-input-response"),
     INVALID_USER_CAPTCHA_RESPONSE("invalid-input-response"),
     BAD_REQUEST("bad-request"),
+    TIMEOUT_OR_DUPLICATE("timeout-or-duplicate"),
 
     //Custom errors
     MISSING_USERNAME_REQUEST_PARAMETER("missing-username-request-parameter"),
     MISSING_CAPTCHA_RESPONSE_PARAMETER("missing-captcha-response-parameter"),
-    VALIDATION_HTTP_ERROR("validation-http-error");
+    VALIDATION_HTTP_ERROR("validation-http-error"),
+    UNSUPPORTED_ERROR_CODE("unsupported_error_code");
+
+    private static final Logger log = getLogger(ErrorCode.class);
 
     private final String text;
 
@@ -39,12 +46,17 @@ public enum ErrorCode {
                 return INVALID_USER_CAPTCHA_RESPONSE;
             case "bad-request":
                 return BAD_REQUEST;
+            case "timeout-or-duplicate":
+                return TIMEOUT_OR_DUPLICATE;
             case "missing-username-request-parameter":
                 return MISSING_USERNAME_REQUEST_PARAMETER;
             case "missing-captcha-response-parameter":
                 return MISSING_CAPTCHA_RESPONSE_PARAMETER;
+            case "validation-http-error":
+                return VALIDATION_HTTP_ERROR;
             default:
-                throw new IllegalArgumentException("Invalid error code: " + value);
+                log.warn("Unsupported error code: {}", value);
+                return UNSUPPORTED_ERROR_CODE;
         }
     }
 
