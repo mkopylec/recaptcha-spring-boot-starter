@@ -2,12 +2,11 @@ plugins {
     id 'groovy'
     id 'maven-publish'
     id 'jacoco'
-    id 'nebula.optional-base' version '3.1.0'
-    id 'com.github.kt3k.coveralls' version '2.3.1'
+    id 'com.github.kt3k.coveralls' version '2.8.2'
     id 'maven'
     id 'signing'
-    id 'io.codearte.nexus-staging' version '0.8.0'
-    id 'pl.allegro.tech.build.axion-release' version '1.6.0'
+    id 'io.codearte.nexus-staging' version '0.11.0'
+    id 'pl.allegro.tech.build.axion-release' version '1.8.1'
 }
 
 scmVersion {
@@ -30,12 +29,12 @@ repositories {
 dependencies {
 
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.10'
-    compile group: 'org.springframework', name: 'spring-web', version: '4.3.11.RELEASE'
+    compile group: 'org.springframework', name: 'spring-web', version: '4.3.12.RELEASE'
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '1.5.8.RELEASE'
 
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '1.5.8.RELEASE', optional
-    compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '1.5.8.RELEASE', optional
+    compileOnly group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '1.5.8.RELEASE'
+    compileOnly group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '1.5.8.RELEASE'
 
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.5.8.RELEASE'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.8.RELEASE'
@@ -45,6 +44,11 @@ dependencies {
 
 configurations {
     all*.exclude group: 'org.mortbay.jetty', module: 'servlet-api'
+    testCompile.extendsFrom compileOnly
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.3'
 }
 
 task javadocJar(type: Jar) {
@@ -124,8 +128,4 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = true
     }
-}
-
-nexusStaging {
-    numberOfRetries = 20
 }
