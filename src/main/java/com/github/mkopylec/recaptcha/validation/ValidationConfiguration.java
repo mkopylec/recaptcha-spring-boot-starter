@@ -1,7 +1,6 @@
 package com.github.mkopylec.recaptcha.validation;
 
 import com.github.mkopylec.recaptcha.RecaptchaProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -14,8 +13,11 @@ import org.springframework.web.client.RestTemplate;
 @ConditionalOnProperty(name = "recaptcha.testing.enabled", havingValue = "false", matchIfMissing = true)
 public class ValidationConfiguration {
 
-    @Autowired
-    private RecaptchaProperties recaptcha;
+    private final RecaptchaProperties recaptcha;
+
+    public ValidationConfiguration(RecaptchaProperties recaptcha) {
+        this.recaptcha = recaptcha;
+    }
 
     @Bean
     @ConditionalOnMissingBean

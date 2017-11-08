@@ -8,7 +8,6 @@ import com.github.mkopylec.recaptcha.security.login.LoginFailuresCountingHandler
 import com.github.mkopylec.recaptcha.security.login.LoginFailuresManager;
 import com.github.mkopylec.recaptcha.security.login.RecaptchaAwareRedirectStrategy;
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -22,19 +21,17 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 @EnableConfigurationProperties(RecaptchaProperties.class)
 public class SecurityConfiguration {
 
-    @Autowired
-    private RecaptchaProperties recaptcha;
+    private final RecaptchaProperties recaptcha;
 
-    @Bean
-    @ConditionalOnMissingBean
-    public FormLoginConfigurerEnhancer formLoginConfigurerEnhancer(RecaptchaAuthenticationFilter authenticationFilter, LoginFailuresClearingHandler successHandler, LoginFailuresCountingHandler failureHandler) {
-        return new FormLoginConfigurerEnhancer(authenticationFilter, successHandler, failureHandler);
+    public SecurityConfiguration(RecaptchaProperties recaptcha) {
+        this.recaptcha = recaptcha;
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public RecaptchaAuthenticationFilter recaptchaAuthenticationFilter(RecaptchaValidator recaptchaValidator, LoginFailuresManager failuresManager) {
-        return new RecaptchaAuthenticationFilter(recaptchaValidator, recaptcha, failuresManager);
+    public FormLoginConfigurerEnhancer formLoginConfigurerEnhancer(LoginFailuresClearingHandler successHandler, LoginFailuresCountingHandler failureHandler, RecaptchaValidator recaptchaValidator, LoginFailuresManager failuresManager) {
+        RecaptchaAuthenticationFilter authenticationFilter = new RecaptchaAuthenticationFilter(recaptchaValidator, recaptcha, failuresManager);
+        return new FormLoginConfigurerEnhancer(authenticationFilter, successHandler, failureHandler);
     }
 
     @Bean
