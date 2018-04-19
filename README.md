@@ -124,7 +124,6 @@ Create custom login failures manager bean by extending `LoginFailuresManager`:
 
 ```java
 @Component
-@EnableConfigurationProperties(RecaptchaProperties.class)
 public class CustomLoginFailuresManager extends LoginFailuresManager {
 
     public CustomLoginFailuresManager(RecaptchaProperties recaptcha) {
@@ -152,7 +151,7 @@ There can be 4 different query parameters in redirect to login page:
  - _logout_ - user has been successfully logged out
 
 There is a default `LoginFailuresManager` implementation in the starter which is `InMemoryLoginFailuresManager`.
-It is strongly recommended to create your own `LoginFailuresManager` implementation and not to use the default one.
+It is recommended to create your own `LoginFailuresManager` implementation that persists login failures in some storage.
 
 ### Integration testing mode usage
 Enable testing mode:
