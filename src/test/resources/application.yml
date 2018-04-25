@@ -1,9 +1,16 @@
 recaptcha:
-  validation.verificationUrl: http://localhost:8081/recaptcha/api/siteverify
-  security.loginFailuresThreshold: 3
+  validation:
+    verification-url: http://localhost:8081/recaptcha/api/siteverify
+  security:
+    login-failures-threshold: 3
 
-security:
-  ignored: /testValidation/**, /testTesting/**
-  user:
-    name: user
-    password: password
+spring:
+  security:
+    user:
+      name: user
+      password: password
+
+logging:
+  level:
+    com.github.mkopylec: debug
+

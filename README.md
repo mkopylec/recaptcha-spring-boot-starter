@@ -13,7 +13,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'com.github.mkopylec:recaptcha-spring-boot-starter:1.3.5'
+    compile group: 'com.github.mkopylec', name: 'recaptcha-spring-boot-starter', version: '2.0.0'
 }
 ```
 
@@ -49,7 +49,7 @@ public class MainController {
     @Autowired
     private RecaptchaValidator recaptchaValidator;
 
-    @RequestMapping(value = "/", method = POST)
+    @PostMapping("/")
     public void validateCaptcha(HttpServletRequest request) {
         ValidationResult result = recaptchaValidator.validate(request);
         if (result.isSuccess()) {
@@ -62,7 +62,7 @@ public class MainController {
 Set your secret key in _application.yml_ file:
 
 ```yaml
-recaptcha.validation.secretKey: <your_secret_key>
+recaptcha.validation.secret-key: <your_secret_key>
 ```
 
 ##### Additional info
@@ -73,7 +73,7 @@ Add Spring Security dependency:
 
 ```gradle
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-security:1.3.5.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.0.1.RELEASE'
 }
 ```
 
@@ -124,10 +124,8 @@ Create custom login failures manager bean by extending `LoginFailuresManager`:
 
 ```java
 @Component
-@EnableConfigurationProperties(RecaptchaProperties.class)
 public class CustomLoginFailuresManager extends LoginFailuresManager {
 
-    @Autowired
     public CustomLoginFailuresManager(RecaptchaProperties recaptcha) {
         super(recaptcha);
     }
@@ -139,7 +137,7 @@ public class CustomLoginFailuresManager extends LoginFailuresManager {
 Set your secret key in _application.yml_ file:
 
 ```yaml
-recaptcha.validation.secretKey: <your_secret_key>
+recaptcha.validation.secret-key: <your_secret_key>
 ```
 
 ##### Additional info
@@ -153,7 +151,7 @@ There can be 4 different query parameters in redirect to login page:
  - _logout_ - user has been successfully logged out
 
 There is a default `LoginFailuresManager` implementation in the starter which is `InMemoryLoginFailuresManager`.
-It is strongly recommended to create your own `LoginFailuresManager` implementation and not to use the default one.
+It is recommended to create your own `LoginFailuresManager` implementation that persists login failures in some storage.
 
 ### Integration testing mode usage
 Enable testing mode:
@@ -166,8 +164,8 @@ Configure testing mode:
 
 ```yaml
 recaptcha.testing:
-    successResult: false
-    resultErrorCodes: INVALID_SECRET_KEY, INVALID_USER_CAPTCHA_RESPONSE
+    success-result: false
+    result-error-codes: INVALID_SECRET_KEY, INVALID_USER_CAPTCHA_RESPONSE
 ```
 
 ##### Additional info
@@ -178,17 +176,17 @@ In testing mode no remote reCAPTCHA validation is fired, the validation process 
 ```yaml
 recaptcha:
     validation:
-        secretKey: # reCAPTCHA secret key.
-        responseParameter: g-recaptcha-response # HTTP request parameter name containing user reCAPTCHA response.
-        verificationUrl: https://www.google.com/recaptcha/api/siteverify # reCAPTCHA validation endpoint.
+        secret-key: # reCAPTCHA secret key.
+        response-parameter: g-recaptcha-response # HTTP request parameter name containing user reCAPTCHA response.
+        verification-url: https://www.google.com/recaptcha/api/siteverify # reCAPTCHA validation endpoint.
     security:
-        failureUrl: /login # URL to redirect to when user authentication fails.
-        loginFailuresThreshold: 5 # Number of allowed login failures before reCAPTCHA must be displayed.
-        continueOnValidationHttpError: true # Permits on denies continuing user authentication process after reCAPTCHA validation fails because of HTTP error.
+        failure-url: /login # URL to redirect to when user authentication fails.
+        login-failures-threshold: 5 # Number of allowed login failures before reCAPTCHA must be displayed.
+        continue-on-validation-http-error: true # Permits or denies continuing user authentication process after reCAPTCHA validation fails because of HTTP error.
     testing:
         enabled: false # Flag for enabling and disabling testing mode.
-        successResult: true # Defines successful or unsuccessful validation result, can be changed during tests.
-        resultErrorCodes: # Errors in validation result, can be changed during tests.
+        success-result: true # Defines successful or unsuccessful validation result, can be changed during tests.
+        result-error-codes: # Errors in validation result, can be changed during tests.
 ```
 
 ## Examples

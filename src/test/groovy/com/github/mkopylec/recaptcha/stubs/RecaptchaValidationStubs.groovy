@@ -13,10 +13,13 @@ import static com.github.tomakehurst.wiremock.client.WireMock.containing
 import static com.github.tomakehurst.wiremock.client.WireMock.post
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE
+import static org.springframework.http.HttpStatus.OK
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 
 class RecaptchaValidationStubs {
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static ObjectMapper mapper = new ObjectMapper()
 
     static void stubSuccessfulRecaptchaValidation() {
         stubRecaptchaValidation(VALID_CAPTCHA_RESPONSE, VALID_SECRET, '', true, [])
@@ -48,8 +51,8 @@ class RecaptchaValidationStubs {
                 .withRequestBody(nullableContaining('remoteip', remoteIp))
                 .willReturn(
                 aResponse()
-                        .withStatus(200)
-                        .withHeader('Content-Type', 'application/json')
+                        .withStatus(OK.value())
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                         .withBody(result)
         ));
     }
