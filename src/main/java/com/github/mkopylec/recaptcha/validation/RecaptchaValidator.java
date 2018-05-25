@@ -32,13 +32,21 @@ public class RecaptchaValidator {
         return validate(request.getParameter(validation.getResponseParameter()), ipAddress);
     }
 
+    public ValidationResult validate(HttpServletRequest request, String ipAddress, String secretKey) {
+        return validate(request.getParameter(validation.getResponseParameter()), ipAddress, secretKey);
+    }
+
     public ValidationResult validate(String userResponse) {
         return validate(userResponse, null);
     }
 
     public ValidationResult validate(String userResponse, String ipAddress) {
+        return validate(userResponse, ipAddress, validation.getSecretKey());
+    }
+
+    public ValidationResult validate(String userResponse, String ipAddress, String secretKey) {
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-        parameters.add("secret", validation.getSecretKey());
+        parameters.add("secret", secretKey);
         parameters.add("response", userResponse);
         parameters.add("remoteip", ipAddress);
 
