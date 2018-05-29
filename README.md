@@ -13,7 +13,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile group: 'com.github.mkopylec', name: 'recaptcha-spring-boot-starter', version: '2.1.0'
+    compile group: 'com.github.mkopylec', name: 'recaptcha-spring-boot-starter', version: '2.1.1'
 }
 ```
 
