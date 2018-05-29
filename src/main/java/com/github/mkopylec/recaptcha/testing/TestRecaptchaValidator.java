@@ -29,12 +29,22 @@ public class TestRecaptchaValidator extends RecaptchaValidator {
     }
 
     @Override
+    public ValidationResult validate(HttpServletRequest request, String ipAddress, String secretKey) {
+        return getValidationResult();
+    }
+
+    @Override
     public ValidationResult validate(String userResponse) {
         return getValidationResult();
     }
 
     @Override
     public ValidationResult validate(String userResponse, String ipAddress) {
+        return getValidationResult();
+    }
+
+    @Override
+    public ValidationResult validate(String userResponse, String ipAddress, String secretKey) {
         return getValidationResult();
     }
 
