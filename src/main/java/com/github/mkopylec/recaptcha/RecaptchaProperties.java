@@ -113,11 +113,11 @@ public class RecaptchaProperties {
             /**
              * reCAPTCHA validation request read timeout.
              */
-            private Duration read = ofMillis(1);
+            private Duration read = ofMillis(1000);
             /**
              * reCAPTCHA validation request write timeout.
              */
-            private Duration write = ofMillis(1);
+            private Duration write = ofMillis(1000);
 
             public Duration getConnect() {
                 return connect;

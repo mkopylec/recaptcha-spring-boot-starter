@@ -1,10 +1,6 @@
 recaptcha:
   validation:
     verification-url: http://localhost:8081/recaptcha/api/siteverify
-    timeout:
-      connect: 500ms
-      read: 1000ms
-      write: 1000ms
   security:
     login-failures-threshold: 3
 
