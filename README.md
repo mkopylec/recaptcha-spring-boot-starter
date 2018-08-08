@@ -175,18 +175,22 @@ In testing mode no remote reCAPTCHA validation is fired, the validation process 
 
 ```yaml
 recaptcha:
-    validation:
-        secret-key: # reCAPTCHA secret key.
-        response-parameter: g-recaptcha-response # HTTP request parameter name containing user reCAPTCHA response.
-        verification-url: https://www.google.com/recaptcha/api/siteverify # reCAPTCHA validation endpoint.
-    security:
-        failure-url: /login # URL to redirect to when user authentication fails.
-        login-failures-threshold: 5 # Number of allowed login failures before reCAPTCHA must be displayed.
-        continue-on-validation-http-error: true # Permits or denies continuing user authentication process after reCAPTCHA validation fails because of HTTP error.
-    testing:
-        enabled: false # Flag for enabling and disabling testing mode.
-        success-result: true # Defines successful or unsuccessful validation result, can be changed during tests.
-        result-error-codes: # Errors in validation result, can be changed during tests.
+  validation:
+    secret-key: # reCAPTCHA secret key.
+    response-parameter: g-recaptcha-response # HTTP request parameter name containing user reCAPTCHA response.
+    verification-url: https://www.google.com/recaptcha/api/siteverify # reCAPTCHA validation endpoint.
+    timeout:
+      connect: 500ms # reCAPTCHA validation request connect timeout.
+      read: 1000ms # reCAPTCHA validation request read timeout.
+      write: 1000ms # reCAPTCHA validation request write timeout.
+  security:
+    failure-url: /login # URL to redirect to when user authentication fails.
+    login-failures-threshold: 5 # Number of allowed login failures before reCAPTCHA must be displayed.
+    continue-on-validation-http-error: true # Permits or denies continuing user authentication process after reCAPTCHA validation fails because of HTTP error.
+  testing:
+    enabled: false # Flag for enabling and disabling testing mode.
+    success-result: true # Defines successful or unsuccessful validation result, can be changed during tests.
+    result-error-codes: # Errors in validation result, can be changed during tests.
 ```
 
 ## Examples

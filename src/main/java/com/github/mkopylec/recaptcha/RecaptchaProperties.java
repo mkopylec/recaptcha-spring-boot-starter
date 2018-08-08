@@ -3,9 +3,11 @@ package com.github.mkopylec.recaptcha;
 import com.github.mkopylec.recaptcha.validation.ErrorCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.time.Duration.ofMillis;
 import static org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter.DEFAULT_LOGIN_PAGE_URL;
 
 /**
@@ -65,6 +67,10 @@ public class RecaptchaProperties {
          * reCAPTCHA validation endpoint.
          */
         private String verificationUrl = "https://www.google.com/recaptcha/api/siteverify";
+        /**
+         * Properties responsible for reCAPTCHA validation request timeout.
+         */
+        private Timeout timeout = new Timeout();
 
         public String getSecretKey() {
             return secretKey;
@@ -88,6 +94,54 @@ public class RecaptchaProperties {
 
         public void setVerificationUrl(String verificationUrl) {
             this.verificationUrl = verificationUrl;
+        }
+
+        public Timeout getTimeout() {
+            return timeout;
+        }
+
+        public void setTimeout(Timeout timeout) {
+            this.timeout = timeout;
+        }
+
+        public static class Timeout {
+
+            /**
+             * reCAPTCHA validation request connect timeout.
+             */
+            private Duration connect = ofMillis(500);
+            /**
+             * reCAPTCHA validation request read timeout.
+             */
+            private Duration read = ofMillis(1);
+            /**
+             * reCAPTCHA validation request write timeout.
+             */
+            private Duration write = ofMillis(1);
+
+            public Duration getConnect() {
+                return connect;
+            }
+
+            public void setConnect(Duration connect) {
+                this.connect = connect;
+            }
+
+            public Duration getRead() {
+                return read;
+            }
+
+            public void setRead(Duration read) {
+                this.read = read;
+            }
+
+            public Duration getWrite() {
+                return write;
+            }
+
+            public void setWrite(Duration write) {
+                this.write = write;
+            }
         }
     }
 

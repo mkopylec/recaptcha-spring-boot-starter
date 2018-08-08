@@ -12,7 +12,7 @@ import static java.util.Collections.unmodifiableList;
 public class ValidationResult {
 
     private boolean success;
-    private List<ErrorCode> errorCodes = new ArrayList<>();
+    private List<ErrorCode> errorCodes;
 
     @JsonCreator
     public ValidationResult(
@@ -20,7 +20,7 @@ public class ValidationResult {
             @JsonProperty("error-codes") List<ErrorCode> errorCodes
     ) {
         this.success = success;
-        this.errorCodes = errorCodes == null ? new ArrayList<ErrorCode>() : errorCodes;
+        this.errorCodes = errorCodes == null ? new ArrayList<>() : errorCodes;
     }
 
     public boolean isSuccess() {
