@@ -13,7 +13,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile group: 'com.github.mkopylec', name: 'recaptcha-spring-boot-starter', version: '2.1.1'
+    compile group: 'com.github.mkopylec', name: 'recaptcha-spring-boot-starter', version: '2.2.0'
 }
 ```
 
@@ -73,7 +73,7 @@ Add Spring Security dependency:
 
 ```gradle
 dependencies {
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.0.1.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.0.4.RELEASE'
 }
 ```
 
@@ -164,8 +164,8 @@ Configure testing mode:
 
 ```yaml
 recaptcha.testing:
-    success-result: false
-    result-error-codes: INVALID_SECRET_KEY, INVALID_USER_CAPTCHA_RESPONSE
+  success-result: false
+  result-error-codes: INVALID_SECRET_KEY, INVALID_USER_CAPTCHA_RESPONSE
 ```
 
 ##### Additional info
