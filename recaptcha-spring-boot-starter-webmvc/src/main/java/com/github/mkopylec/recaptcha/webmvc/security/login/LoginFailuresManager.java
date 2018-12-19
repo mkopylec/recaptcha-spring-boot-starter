@@ -19,7 +19,6 @@ public abstract class LoginFailuresManager {
         security = recaptcha.getSecurity();
     }
 
-    // TODO interface LoginFailuresRepository ?
     public abstract void addLoginFailure(HttpServletRequest request);
 
     public abstract int getLoginFailuresCount(HttpServletRequest request);
