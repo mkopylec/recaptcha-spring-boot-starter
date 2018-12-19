@@ -31,6 +31,7 @@ subprojects {
     ext {
         springBootVersion = '2.1.1.RELEASE'
         okhttpVersion = '3.12.0'
+        jacksonVersion = '2.9.7'
         spockSpringVersion = '1.2-groovy-2.5'
         wiremockVersion = '2.19.0'
     }
@@ -38,6 +39,7 @@ subprojects {
     dependencies {
 
         compile group: 'com.squareup.okhttp3', name: 'okhttp', version: okhttpVersion
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: jacksonVersion
 
         compileOnly group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: springBootVersion
         compileOnly group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: springBootVersion
