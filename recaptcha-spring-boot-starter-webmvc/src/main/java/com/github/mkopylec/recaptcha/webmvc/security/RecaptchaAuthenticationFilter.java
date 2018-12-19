@@ -30,15 +30,18 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
     protected final RecaptchaValidator recaptchaValidator;
     protected final RecaptchaProperties recaptcha;
     protected final LoginFailuresManager failuresManager;
+    protected final AuthenticationRequestParser requestParser;
 
     public RecaptchaAuthenticationFilter(
             RecaptchaValidator recaptchaValidator,
             RecaptchaProperties recaptcha,
-            LoginFailuresManager failuresManager
+            LoginFailuresManager failuresManager,
+            AuthenticationRequestParser requestParser
     ) {
         this.recaptchaValidator = recaptchaValidator;
         this.recaptcha = recaptcha;
         this.failuresManager = failuresManager;
+        this.requestParser = requestParser;
     }
 
     @Override
@@ -46,6 +49,7 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
         if (getUsernameParameter() == null) {
             throw new RecaptchaAuthenticationException(singletonList(MISSING_USERNAME_REQUEST_PARAMETER));
         }
+        request = new AuthenticationRequest(request, requestParser);
         if (failuresManager.isRecaptchaRequired(request)) {
             try {
                 String recaptchaResponse = obtainRecaptchaResponse(request);
@@ -93,7 +97,21 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
         notNull(failuresManager, "Missing login failure manager");
     }
 
-    protected String obtainRecaptchaResponse(HttpServletRequest request) {
-        return request.getParameter(recaptcha.getValidation().getResponseParameter());
+    @Override
+    protected String obtainPassword(HttpServletRequest request) {
+        return ((AuthenticationRequest) request).getParameters().getPassword();
     }
+
+    @Override
+    protected String obtainUsername(HttpServletRequest request) {
+        return ((AuthenticationRequest) request).getParameters().getUsername();
+    }
+
+    protected String obtainRecaptchaResponse(HttpServletRequest request) {
+        return ((AuthenticationRequest) request).getParameters().getRecaptchaResponse();
+    }
+
+//    protected String obtainRecaptchaResponse(HttpServletRequest request) {
+//        return request.getParameter(recaptcha.getValidation().getResponseParameter());
+//    }
 }
