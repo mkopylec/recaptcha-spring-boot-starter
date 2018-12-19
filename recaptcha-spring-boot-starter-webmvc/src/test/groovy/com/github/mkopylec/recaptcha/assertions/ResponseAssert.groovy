@@ -1,8 +1,8 @@
 package com.github.mkopylec.recaptcha.assertions
 
-import com.github.mkopylec.recaptcha.security.ResponseData
-import com.github.mkopylec.recaptcha.validation.ErrorCode
-import com.github.mkopylec.recaptcha.validation.ValidationResult
+import com.github.mkopylec.recaptcha.webmvc.security.ResponseData
+import com.github.mkopylec.recaptcha.webmvc.validation.ErrorCode
+import com.github.mkopylec.recaptcha.webmvc.validation.ValidationResult
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 

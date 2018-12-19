@@ -1,6 +1,6 @@
-package com.github.mkopylec.recaptcha.security;
+package com.github.mkopylec.recaptcha.webmvc.security;
 
-import com.github.mkopylec.recaptcha.security.login.FormLoginConfigurerEnhancer;
+import com.github.mkopylec.recaptcha.webmvc.security.login.FormLoginConfigurerEnhancer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;

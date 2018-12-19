@@ -1,6 +1,6 @@
-package com.github.mkopylec.recaptcha.security;
+package com.github.mkopylec.recaptcha.webmvc.security;
 
-import com.github.mkopylec.recaptcha.validation.ErrorCode;
+import com.github.mkopylec.recaptcha.webmvc.validation.ErrorCode;
 import org.springframework.security.core.AuthenticationException;
 
 import java.util.List;

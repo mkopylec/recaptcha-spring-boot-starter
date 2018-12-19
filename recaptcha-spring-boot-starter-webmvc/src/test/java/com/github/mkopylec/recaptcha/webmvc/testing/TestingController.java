@@ -1,7 +1,7 @@
-package com.github.mkopylec.recaptcha.testing;
+package com.github.mkopylec.recaptcha.webmvc.testing;
 
-import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
-import com.github.mkopylec.recaptcha.validation.ValidationResult;
+import com.github.mkopylec.recaptcha.webmvc.validation.RecaptchaValidator;
+import com.github.mkopylec.recaptcha.webmvc.validation.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

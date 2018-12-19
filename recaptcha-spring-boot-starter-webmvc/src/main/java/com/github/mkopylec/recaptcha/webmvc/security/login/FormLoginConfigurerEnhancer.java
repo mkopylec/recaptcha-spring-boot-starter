@@ -1,6 +1,6 @@
-package com.github.mkopylec.recaptcha.security.login;
+package com.github.mkopylec.recaptcha.webmvc.security.login;
 
-import com.github.mkopylec.recaptcha.security.RecaptchaAuthenticationFilter;
+import com.github.mkopylec.recaptcha.webmvc.security.RecaptchaAuthenticationFilter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;

@@ -1,4 +1,4 @@
-package com.github.mkopylec.recaptcha.security;
+package com.github.mkopylec.recaptcha.webmvc.security;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

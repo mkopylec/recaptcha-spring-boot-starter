@@ -1,7 +1,7 @@
-package com.github.mkopylec.recaptcha.validation;
+package com.github.mkopylec.recaptcha.webmvc.validation;
 
-import com.github.mkopylec.recaptcha.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.RecaptchaProperties.Validation.Timeout;
+import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties.Validation.Timeout;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

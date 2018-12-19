@@ -1,10 +1,10 @@
-package com.github.mkopylec.recaptcha.testing;
+package com.github.mkopylec.recaptcha.webmvc.testing;
 
-import com.github.mkopylec.recaptcha.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.RecaptchaProperties.Testing;
-import com.github.mkopylec.recaptcha.validation.ErrorCode;
-import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
-import com.github.mkopylec.recaptcha.validation.ValidationResult;
+import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties.Testing;
+import com.github.mkopylec.recaptcha.webmvc.validation.ErrorCode;
+import com.github.mkopylec.recaptcha.webmvc.validation.RecaptchaValidator;
+import com.github.mkopylec.recaptcha.webmvc.validation.ValidationResult;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;

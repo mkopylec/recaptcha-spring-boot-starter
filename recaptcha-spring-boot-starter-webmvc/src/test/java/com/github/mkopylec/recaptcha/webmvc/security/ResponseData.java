@@ -1,4 +1,4 @@
-package com.github.mkopylec.recaptcha.security;
+package com.github.mkopylec.recaptcha.webmvc.security;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

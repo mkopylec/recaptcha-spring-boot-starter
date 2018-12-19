@@ -1,4 +1,4 @@
-package com.github.mkopylec.recaptcha.validation;
+package com.github.mkopylec.recaptcha.webmvc.validation;
 
 import static java.lang.String.format;
 

@@ -1,7 +1,7 @@
 package com.github.mkopylec.recaptcha
 
-import com.github.mkopylec.recaptcha.security.ResponseData
-import com.github.mkopylec.recaptcha.validation.ValidationResult
+import com.github.mkopylec.recaptcha.webmvc.security.ResponseData
+import com.github.mkopylec.recaptcha.webmvc.validation.ValidationResult
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import org.junit.Rule
 import org.springframework.beans.factory.annotation.Autowired

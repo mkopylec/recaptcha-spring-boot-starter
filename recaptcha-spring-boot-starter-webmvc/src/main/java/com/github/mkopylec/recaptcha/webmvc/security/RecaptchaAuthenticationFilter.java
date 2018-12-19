@@ -1,12 +1,12 @@
-package com.github.mkopylec.recaptcha.security;
+package com.github.mkopylec.recaptcha.webmvc.security;
 
-import com.github.mkopylec.recaptcha.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.security.login.LoginFailuresClearingHandler;
-import com.github.mkopylec.recaptcha.security.login.LoginFailuresCountingHandler;
-import com.github.mkopylec.recaptcha.security.login.LoginFailuresManager;
-import com.github.mkopylec.recaptcha.validation.RecaptchaValidationException;
-import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
-import com.github.mkopylec.recaptcha.validation.ValidationResult;
+import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.webmvc.security.login.LoginFailuresClearingHandler;
+import com.github.mkopylec.recaptcha.webmvc.security.login.LoginFailuresCountingHandler;
+import com.github.mkopylec.recaptcha.webmvc.security.login.LoginFailuresManager;
+import com.github.mkopylec.recaptcha.webmvc.validation.RecaptchaValidationException;
+import com.github.mkopylec.recaptcha.webmvc.validation.RecaptchaValidator;
+import com.github.mkopylec.recaptcha.webmvc.validation.ValidationResult;
 import org.slf4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -17,8 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_USERNAME_REQUEST_PARAMETER;
-import static com.github.mkopylec.recaptcha.validation.ErrorCode.VALIDATION_HTTP_ERROR;
+import static com.github.mkopylec.recaptcha.webmvc.validation.ErrorCode.MISSING_USERNAME_REQUEST_PARAMETER;
+import static com.github.mkopylec.recaptcha.webmvc.validation.ErrorCode.VALIDATION_HTTP_ERROR;
 import static java.util.Collections.singletonList;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.Assert.notNull;

@@ -1,7 +1,7 @@
-package com.github.mkopylec.recaptcha.validation;
+package com.github.mkopylec.recaptcha.webmvc.validation;
 
-import com.github.mkopylec.recaptcha.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.RecaptchaProperties.Validation;
+import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties.Validation;
 import org.slf4j.Logger;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;

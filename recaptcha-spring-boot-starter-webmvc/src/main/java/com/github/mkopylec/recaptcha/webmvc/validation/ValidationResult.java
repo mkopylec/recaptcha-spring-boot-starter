@@ -1,4 +1,4 @@
-package com.github.mkopylec.recaptcha.validation;
+package com.github.mkopylec.recaptcha.webmvc.validation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;

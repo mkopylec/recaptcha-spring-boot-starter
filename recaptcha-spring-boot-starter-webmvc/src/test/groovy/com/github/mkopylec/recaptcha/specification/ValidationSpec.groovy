@@ -1,7 +1,7 @@
 package com.github.mkopylec.recaptcha.specification
 
 import com.github.mkopylec.recaptcha.BasicSpec
-import com.github.mkopylec.recaptcha.RecaptchaProperties
+import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties
 import org.springframework.beans.factory.annotation.Autowired
 
 import static com.github.mkopylec.recaptcha.Strings.INVALID_SECRET
@@ -12,8 +12,8 @@ import static com.github.mkopylec.recaptcha.stubs.RecaptchaValidationStubs.stubC
 import static com.github.mkopylec.recaptcha.stubs.RecaptchaValidationStubs.stubInvalidSecretRecaptchaValidation
 import static com.github.mkopylec.recaptcha.stubs.RecaptchaValidationStubs.stubMissingResponseRecaptchaValidation
 import static com.github.mkopylec.recaptcha.stubs.RecaptchaValidationStubs.stubSuccessfulRecaptchaValidation
-import static com.github.mkopylec.recaptcha.validation.ErrorCode.INVALID_SECRET_KEY
-import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_USER_CAPTCHA_RESPONSE
+import static com.github.mkopylec.recaptcha.webmvc.validation.ErrorCode.INVALID_SECRET_KEY
+import static com.github.mkopylec.recaptcha.webmvc.validation.ErrorCode.MISSING_USER_CAPTCHA_RESPONSE
 
 class ValidationSpec extends BasicSpec {
 

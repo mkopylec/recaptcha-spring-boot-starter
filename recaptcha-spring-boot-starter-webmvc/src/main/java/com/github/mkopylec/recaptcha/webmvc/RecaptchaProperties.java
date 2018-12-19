@@ -1,6 +1,6 @@
-package com.github.mkopylec.recaptcha;
+package com.github.mkopylec.recaptcha.webmvc;
 
-import com.github.mkopylec.recaptcha.validation.ErrorCode;
+import com.github.mkopylec.recaptcha.webmvc.validation.ErrorCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.time.Duration;

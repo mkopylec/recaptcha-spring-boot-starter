@@ -1,13 +1,13 @@
-package com.github.mkopylec.recaptcha.security;
+package com.github.mkopylec.recaptcha.webmvc.security;
 
-import com.github.mkopylec.recaptcha.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.security.login.FormLoginConfigurerEnhancer;
-import com.github.mkopylec.recaptcha.security.login.InMemoryLoginFailuresManager;
-import com.github.mkopylec.recaptcha.security.login.LoginFailuresClearingHandler;
-import com.github.mkopylec.recaptcha.security.login.LoginFailuresCountingHandler;
-import com.github.mkopylec.recaptcha.security.login.LoginFailuresManager;
-import com.github.mkopylec.recaptcha.security.login.RecaptchaAwareRedirectStrategy;
-import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
+import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.webmvc.security.login.FormLoginConfigurerEnhancer;
+import com.github.mkopylec.recaptcha.webmvc.security.login.InMemoryLoginFailuresManager;
+import com.github.mkopylec.recaptcha.webmvc.security.login.LoginFailuresClearingHandler;
+import com.github.mkopylec.recaptcha.webmvc.security.login.LoginFailuresCountingHandler;
+import com.github.mkopylec.recaptcha.webmvc.security.login.LoginFailuresManager;
+import com.github.mkopylec.recaptcha.webmvc.security.login.RecaptchaAwareRedirectStrategy;
+import com.github.mkopylec.recaptcha.webmvc.validation.RecaptchaValidator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;

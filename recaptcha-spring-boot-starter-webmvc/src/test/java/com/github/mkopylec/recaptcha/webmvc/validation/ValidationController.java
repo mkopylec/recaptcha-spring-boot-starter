@@ -1,4 +1,4 @@
-package com.github.mkopylec.recaptcha.validation;
+package com.github.mkopylec.recaptcha.webmvc.validation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
