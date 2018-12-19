@@ -1,134 +1,143 @@
 plugins {
-    id 'groovy'
-    id 'maven-publish'
+//    id 'groovy'
+//    id 'maven-publish'
     id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.8.2'
-    id 'maven'
+//    id 'maven'
     id 'signing'
     id 'io.codearte.nexus-staging' version '0.11.0'
     id 'pl.allegro.tech.build.axion-release' version '1.9.2'
 }
 
-scmVersion {
-    tag {
-        prefix = ''
+subprojects {
+
+    apply plugin: 'groovy'
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+
+    sourceCompatibility = 1.8
+
+    scmVersion {
+        tag {
+            prefix = ''
+        }
     }
-}
 
-group = 'com.github.mkopylec'
-archivesBaseName = name
-version = scmVersion.version
+    group = 'com.github.mkopylec'
+    archivesBaseName = name
+    version = scmVersion.version
 
-sourceCompatibility = 1.8
+    repositories {
+        mavenCentral()
+    }
 
-repositories {
-    mavenCentral()
-}
+    ext {
+        springBootVersion = '2.1.1.RELEASE'
+        okhttpVersion = '3.12.0'
+        spockSpringVersion = '1.2-groovy-2.5'
+        wiremockVersion = '2.19.0'
+    }
 
-ext {
-    springBootVersion = '2.0.4.RELEASE'
-}
+    dependencies {
 
-dependencies {
+        compile group: 'com.squareup.okhttp3', name: 'okhttp', version: okhttpVersion
 
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
-    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.11.0'
+        compileOnly group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: springBootVersion
+        compileOnly group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: springBootVersion
 
-    compileOnly group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: springBootVersion
-    compileOnly group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: springBootVersion
+        testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
+        testCompile group: 'org.spockframework', name: 'spock-spring', version: spockSpringVersion
+        testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: wiremockVersion
+    }
 
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
-    testCompile group: 'org.spockframework', name: 'spock-spring', version: '1.1-groovy-2.4'
-    testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: '2.18.0'
-}
+    configurations {
+        testCompile.extendsFrom compileOnly
+    }
 
-configurations {
-    testCompile.extendsFrom compileOnly
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+
+    task sourceJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives javadocJar, sourceJar
+    }
+
+    signing {
+        if (project.ext.has('signArtifacts')) {
+            sign configurations.archives
+        }
+    }
+
+    ext {
+        ossrhUsername = project.ext.has('ossrhUsername') ? project.ext.ossrhUsername : ''
+        ossrhPassword = project.ext.has('ossrhPassword') ? project.ext.ossrhPassword : ''
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+                pom.project {
+                    name 'reCAPTCHA Spring Boot Starter'
+                    packaging 'jar'
+                    description 'Spring Boot starter for Google\'s reCAPTCHA'
+                    url 'https://github.com/mkopylec/recaptcha-spring-boot-starter'
+                    scm {
+                        connection 'scm:git:https://github.com/mkopylec/recaptcha-spring-boot-starter.git'
+                        developerConnection 'scm:git:https://github.com/mkopylec/recaptcha-spring-boot-starter.git'
+                        url 'https://github.com/mkopylec/recaptcha-spring-boot-starter'
+                    }
+                    licenses {
+                        license {
+                            name 'The Apache License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id 'mkopylec'
+                            name 'Mariusz Kopylec'
+                            email 'mariusz.kopylec@o2.pl'
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                artifact sourceJar
+            }
+        }
+    }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.9'
+    gradleVersion = '4.9' // TODO 5.0
 }
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-task sourceJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives javadocJar, sourceJar
-}
-
-signing {
-    if (project.ext.has('signArtifacts')) {
-        sign configurations.archives
-    }
-}
-
-ext {
-    ossrhUsername = project.ext.has('ossrhUsername') ? project.ext.ossrhUsername : ''
-    ossrhPassword = project.ext.has('ossrhPassword') ? project.ext.ossrhPassword : ''
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-            pom.project {
-                name 'reCAPTCHA Spring Boot Starter'
-                packaging 'jar'
-                description 'Spring Boot starter for Google\'s reCAPTCHA'
-                url 'https://github.com/mkopylec/recaptcha-spring-boot-starter'
-                scm {
-                    connection 'scm:git:https://github.com/mkopylec/recaptcha-spring-boot-starter.git'
-                    developerConnection 'scm:git:https://github.com/mkopylec/recaptcha-spring-boot-starter.git'
-                    url 'https://github.com/mkopylec/recaptcha-spring-boot-starter'
-                }
-                licenses {
-                    license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'mkopylec'
-                        name 'Mariusz Kopylec'
-                        email 'mariusz.kopylec@o2.pl'
-                    }
-                }
-            }
-        }
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact sourceJar
-        }
-    }
-}
-
-jacoco {
-    toolVersion = '0.8.1'
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-}
+//jacoco {
+//    toolVersion = '0.8.1'
+//}
+//
+//jacocoTestReport {
+//    reports {
+//        xml.enabled = true
+//        html.enabled = true
+//    }
+//}
