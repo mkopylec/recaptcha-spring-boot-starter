@@ -5,11 +5,11 @@ import com.github.mkopylec.recaptcha.commons.RecaptchaProperties.Validation;
 import com.github.mkopylec.recaptcha.commons.validation.RecaptchaValidationException;
 import com.github.mkopylec.recaptcha.commons.validation.ValidationResult;
 import org.slf4j.Logger;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -50,23 +50,24 @@ public class RecaptchaValidator {
     }
 
     public Mono<ValidationResult> validate(Mono<String> userResponse, String ipAddress, String secretKey) {
-        webClient.post()
-                .body(BodyInserters.)
+        Mono<MultiValueMap<String, Object>> body = userResponse.map(response -> {
+            MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+            parameters.add("secret", secretKey);
+            parameters.add("response", response);
+            parameters.add("remoteip", ipAddress);
+            log.debug("Validating reCAPTCHA:\n    verification url: {}\n    verification parameters: {}", validation.getVerificationUrl(), parameters);
+            return parameters;
+        });
+        return webClient.post()
+                .body(body, new ParameterizedTypeReference<MultiValueMap<String, Object>>() {
 
-        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-        parameters.add("secret", secretKey);
-        parameters.add("response", userResponse);
-        parameters.add("remoteip", ipAddress);
-
-        log.debug("Validating reCAPTCHA:\n    verification url: {}\n    verification parameters: {}", validation.getVerificationUrl(), parameters);
-
-        try {
-            ValidationResult result = restTemplate.postForEntity(validation.getVerificationUrl(), parameters, ValidationResult.class).getBody();
-            log.debug("reCAPTCHA validation finished: {}", result);
-            return result;
-        } catch (RestClientException ex) {
-            throw new RecaptchaValidationException(userResponse, validation.getVerificationUrl(), ex);
-        }
+                })
+                .retrieve()
+                .bodyToMono(ValidationResult.class)
+                .doOnSuccess(result -> log.debug("reCAPTCHA validation finished: {}", result))
+                .doOnError(WebClientException.class, ex -> {
+                    throw new RecaptchaValidationException(validation.getVerificationUrl(), ex);
+                });
     }
 
     protected String getIpAddress(ServerWebExchange exchange) {

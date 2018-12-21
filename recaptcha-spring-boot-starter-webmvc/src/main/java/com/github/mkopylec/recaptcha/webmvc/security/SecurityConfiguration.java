@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
-@Configuration("recaptchaSecurityConfiguration")
+@Configuration
 @ConditionalOnClass({EnableWebSecurity.class, AbstractAuthenticationProcessingFilter.class})
 public class SecurityConfiguration {
 
@@ -27,32 +27,32 @@ public class SecurityConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public FormLoginConfigurerEnhancer formLoginConfigurerEnhancer(LoginFailuresClearingHandler successHandler, LoginFailuresCountingHandler failureHandler, RecaptchaValidator recaptchaValidator, LoginFailuresManager failuresManager) {
+    public FormLoginConfigurerEnhancer webMvcFormLoginConfigurerEnhancer(LoginFailuresClearingHandler successHandler, LoginFailuresCountingHandler failureHandler, RecaptchaValidator recaptchaValidator, LoginFailuresManager failuresManager) {
         RecaptchaAuthenticationFilter authenticationFilter = new RecaptchaAuthenticationFilter(recaptchaValidator, recaptcha, failuresManager);
         return new FormLoginConfigurerEnhancer(authenticationFilter, successHandler, failureHandler);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public LoginFailuresManager loginFailuresManager() {
+    public LoginFailuresManager webMvcLoginFailuresManager() {
         return new InMemoryLoginFailuresManager(recaptcha);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public LoginFailuresCountingHandler loginFailuresCountingHandler(LoginFailuresManager failuresManager, RecaptchaAwareRedirectStrategy redirectStrategy) {
+    public LoginFailuresCountingHandler webMvcLoginFailuresCountingHandler(LoginFailuresManager failuresManager, RecaptchaAwareRedirectStrategy redirectStrategy) {
         return new LoginFailuresCountingHandler(failuresManager, recaptcha, redirectStrategy);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public LoginFailuresClearingHandler loginFailuresClearingHandler(LoginFailuresManager failuresManager) {
+    public LoginFailuresClearingHandler webMvcLoginFailuresClearingHandler(LoginFailuresManager failuresManager) {
         return new LoginFailuresClearingHandler(failuresManager);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public RecaptchaAwareRedirectStrategy recaptchaAwareRedirectStrategy(LoginFailuresManager failuresManager) {
+    public RecaptchaAwareRedirectStrategy webMvcRecaptchaAwareRedirectStrategy(LoginFailuresManager failuresManager) {
         return new RecaptchaAwareRedirectStrategy(failuresManager);
     }
 }

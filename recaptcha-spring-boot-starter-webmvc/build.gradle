@@ -2,4 +2,5 @@ dependencies {
 
     compile project(':recaptcha-spring-boot-starter-commons')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
+    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: okhttpVersion
 }

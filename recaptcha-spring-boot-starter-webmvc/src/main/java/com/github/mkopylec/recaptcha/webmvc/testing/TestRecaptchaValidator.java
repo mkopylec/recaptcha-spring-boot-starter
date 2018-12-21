@@ -1,7 +1,6 @@
 package com.github.mkopylec.recaptcha.webmvc.testing;
 
 import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties.Testing;
 import com.github.mkopylec.recaptcha.webmvc.validation.ErrorCode;
 import com.github.mkopylec.recaptcha.webmvc.validation.RecaptchaValidator;
 import com.github.mkopylec.recaptcha.webmvc.validation.ValidationResult;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 
 public class TestRecaptchaValidator extends RecaptchaValidator {
 
-    protected final Testing testing;
+    protected final RecaptchaProperties.Testing testing;
 
     public TestRecaptchaValidator(RecaptchaProperties recaptcha) {
         super(null, recaptcha);

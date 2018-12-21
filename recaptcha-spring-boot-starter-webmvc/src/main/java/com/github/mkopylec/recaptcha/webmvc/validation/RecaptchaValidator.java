@@ -57,7 +57,7 @@ public class RecaptchaValidator {
             log.debug("reCAPTCHA validation finished: {}", result);
             return result;
         } catch (RestClientException ex) {
-            throw new RecaptchaValidationException(userResponse, validation.getVerificationUrl(), ex);
+            throw new RecaptchaValidationException(validation.getVerificationUrl(), ex);
         }
     }
 }

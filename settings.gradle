@@ -2,3 +2,5 @@ rootProject.name = 'recaptcha-spring-boot-starter'
 include 'recaptcha-spring-boot-starter-webmvc'
 include 'recaptcha-spring-boot-starter-webflux'
 include 'recaptcha-spring-boot-starter-commons'
+include 'recaptcha-spring-boot-starter-test'
+

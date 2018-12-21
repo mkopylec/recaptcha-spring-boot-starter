@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 
-@Configuration("recaptchaValidationConfiguration")
+@Configuration
 @EnableConfigurationProperties(RecaptchaProperties.class)
 @ConditionalOnProperty(name = "recaptcha.testing.enabled", havingValue = "false", matchIfMissing = true)
 public class ValidationConfiguration {
@@ -25,7 +25,7 @@ public class ValidationConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RecaptchaValidator userResponseValidator() {
+    public RecaptchaValidator webMvcRecaptchaValidator() {
         return new RecaptchaValidator(createRestTemplate(), recaptcha);
     }
 

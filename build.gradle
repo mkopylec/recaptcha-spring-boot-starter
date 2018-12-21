@@ -37,8 +37,7 @@ subprojects {
     }
 
     dependencies {
-
-        compile group: 'com.squareup.okhttp3', name: 'okhttp', version: okhttpVersion
+        
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: jacksonVersion
 
         compileOnly group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: springBootVersion

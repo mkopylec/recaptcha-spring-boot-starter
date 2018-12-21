@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.Duration.ofMillis;
-import static org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter.DEFAULT_LOGIN_PAGE_URL;
 
 /**
  * reCAPTCHA configuration properties.
@@ -150,7 +149,7 @@ public class RecaptchaProperties {
         /**
          * URL to redirect to when user authentication fails.
          */
-        private String failureUrl = DEFAULT_LOGIN_PAGE_URL;
+        private String failureUrl = "/login";
         /**
          * Number of allowed login failures before reCAPTCHA must be displayed.
          */

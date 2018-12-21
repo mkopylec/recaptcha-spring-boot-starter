@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration("recaptchaTestingConfiguration")
+@Configuration
 @EnableConfigurationProperties(RecaptchaProperties.class)
 @ConditionalOnProperty(name = "recaptcha.testing.enabled")
 public class TestingConfiguration {
@@ -21,7 +21,7 @@ public class TestingConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RecaptchaValidator userResponseValidator() {
+    public RecaptchaValidator webMvcRecaptchaValidator() {
         return new TestRecaptchaValidator(recaptcha);
     }
 }
