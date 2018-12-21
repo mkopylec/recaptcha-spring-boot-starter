@@ -7,6 +7,8 @@ import org.junit.Rule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.boot.web.reactive.context.ReactiveWebApplicationContext
+import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -26,6 +28,17 @@ abstract class BasicSpec extends Specification {
 
     @LocalServerPort
     protected int port
+
+//    @Value("#{@nettyContext.address().getPort()}")
+//    protected int port
+
+//    @Autowired
+//    protected ReactiveWebServerApplicationContext applicationContext
+//
+//    protected int getPort() {
+//        return applicationContext.webServer.port
+//    }
+
     @Autowired
     private TestRestTemplate restTemplate
 
