@@ -1,10 +1,10 @@
 package com.github.mkopylec.recaptcha.test.assertions
 
-import org.springframework.http.ResponseEntity
+import com.github.mkopylec.recaptcha.test.utils.Response
 
 class Assertions {
 
-    static ResponseAssert assertThat(ResponseEntity response) {
+    static ResponseAssert assertThat(Response response) {
         return new ResponseAssert(response)
     }
 }

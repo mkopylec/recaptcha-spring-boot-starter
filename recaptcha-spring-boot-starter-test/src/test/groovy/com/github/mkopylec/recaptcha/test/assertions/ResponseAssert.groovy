@@ -1,19 +1,19 @@
 package com.github.mkopylec.recaptcha.test.assertions
 
+import com.github.mkopylec.recaptcha.test.utils.Response
 import com.github.mkopylec.recaptcha.test.webmvc.security.ResponseData
-import com.github.mkopylec.recaptcha.webmvc.validation.ErrorCode
-import com.github.mkopylec.recaptcha.webmvc.validation.ValidationResult
+import com.github.mkopylec.recaptcha.commons.validation.ErrorCode
+import com.github.mkopylec.recaptcha.commons.validation.ValidationResult
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 
 import static org.springframework.http.HttpStatus.FOUND
 import static org.springframework.http.HttpStatus.OK
 
 class ResponseAssert {
 
-    private ResponseEntity actual
+    private Response actual
 
-    protected ResponseAssert(ResponseEntity actual) {
+    protected ResponseAssert(Response actual) {
         assert actual != null
         this.actual = actual
     }
@@ -70,7 +70,7 @@ class ResponseAssert {
     }
 
     private ResponseAssert hasStatus(HttpStatus status) {
-        assert actual.statusCode == status
+        assert actual.status == status
         return this
     }
 }

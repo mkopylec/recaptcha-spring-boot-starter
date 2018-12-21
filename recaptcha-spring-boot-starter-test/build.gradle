@@ -1,6 +1,6 @@
 dependencies {
 
-    compile project(':recaptcha-spring-boot-starter-webmvc')
+//    compile project(':recaptcha-spring-boot-starter-webmvc')
     compile project(':recaptcha-spring-boot-starter-webflux')
 
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion

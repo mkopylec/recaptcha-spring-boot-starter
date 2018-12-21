@@ -1,7 +1,7 @@
 package com.github.mkopylec.recaptcha.test.specification
 
 import com.github.mkopylec.recaptcha.test.BasicSpec
-import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties
+import com.github.mkopylec.recaptcha.commons.RecaptchaProperties
 import org.springframework.beans.factory.annotation.Autowired
 
 import static com.github.mkopylec.recaptcha.test.Strings.INVALID_CAPTCHA_RESPONSE
