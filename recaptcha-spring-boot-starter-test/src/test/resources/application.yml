@@ -13,4 +13,5 @@ spring:
 logging:
   level:
     com.github.mkopylec: debug
+    org.mockserver: warn
 

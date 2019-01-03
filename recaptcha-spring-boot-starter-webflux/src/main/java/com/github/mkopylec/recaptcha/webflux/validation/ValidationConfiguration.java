@@ -13,10 +13,10 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
-import java.time.Duration;
-
+import static com.github.mkopylec.recaptcha.commons.validation.Utils.toMilliseconds;
 import static io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.springframework.web.reactive.function.client.WebClient.builder;
 
 @Configuration
 @EnableConfigurationProperties(RecaptchaProperties.class)
@@ -42,12 +42,8 @@ public class ValidationConfiguration {
                 .doOnConnected(connection -> connection
                         .addHandlerLast(new ReadTimeoutHandler(toMilliseconds(timeout.getRead()), MILLISECONDS))
                         .addHandlerLast(new WriteTimeoutHandler(toMilliseconds(timeout.getWrite()), MILLISECONDS))));
-        return WebClient.builder()
+        return builder()
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
-    }
-
-    protected int toMilliseconds(Duration duration) {
-        return (int) duration.toMillis();
     }
 }

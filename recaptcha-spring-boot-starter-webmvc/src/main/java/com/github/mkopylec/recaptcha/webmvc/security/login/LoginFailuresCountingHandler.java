@@ -1,6 +1,6 @@
 package com.github.mkopylec.recaptcha.webmvc.security.login;
 
-import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.commons.RecaptchaProperties;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;

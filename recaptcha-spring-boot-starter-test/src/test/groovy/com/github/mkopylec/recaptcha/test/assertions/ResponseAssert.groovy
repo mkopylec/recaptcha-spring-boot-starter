@@ -1,19 +1,15 @@
 package com.github.mkopylec.recaptcha.test.assertions
 
-import com.github.mkopylec.recaptcha.test.utils.Response
-import com.github.mkopylec.recaptcha.test.webmvc.security.ResponseData
 import com.github.mkopylec.recaptcha.commons.validation.ErrorCode
 import com.github.mkopylec.recaptcha.commons.validation.ValidationResult
-import org.springframework.http.HttpStatus
-
-import static org.springframework.http.HttpStatus.FOUND
-import static org.springframework.http.HttpStatus.OK
+import com.github.mkopylec.recaptcha.test.utils.HttpResponse
+import com.github.mkopylec.recaptcha.test.utils.ResponseBody
 
 class ResponseAssert {
 
-    private Response actual
+    private HttpResponse actual
 
-    protected ResponseAssert(Response actual) {
+    protected ResponseAssert(HttpResponse actual) {
         assert actual != null
         this.actual = actual
     }
@@ -48,28 +44,28 @@ class ResponseAssert {
     }
 
     ResponseAssert hasMessage(String message) {
-        assert responseData != null
-        assert responseData.message == message
+        assert responseBody != null
+        assert responseBody.message == message
         return this
     }
 
     ResponseAssert hasFoundStatus() {
-        return hasStatus(FOUND)
+        return hasStatus(302)
     }
 
     ResponseAssert hasOkStatus() {
-        return hasStatus(OK)
+        return hasStatus(200)
     }
 
     private ValidationResult getValidationResult() {
         (ValidationResult) actual.body
     }
 
-    private ResponseData getResponseData() {
-        (ResponseData) actual.body
+    private ResponseBody getResponseBody() {
+        (ResponseBody) actual.body
     }
 
-    private ResponseAssert hasStatus(HttpStatus status) {
+    private ResponseAssert hasStatus(int status) {
         assert actual.status == status
         return this
     }

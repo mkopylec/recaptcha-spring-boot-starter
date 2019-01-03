@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.github.mkopylec.recaptcha.webflux.validation.ValidationConfiguration
+com.github.mkopylec.recaptcha.webflux.validation.ValidationConfiguration,\
+com.github.mkopylec.recaptcha.webflux.testing.TestingConfiguration

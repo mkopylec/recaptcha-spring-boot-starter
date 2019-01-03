@@ -1,6 +1,6 @@
 package com.github.mkopylec.recaptcha.webmvc.testing;
 
-import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.commons.RecaptchaProperties;
 import com.github.mkopylec.recaptcha.webmvc.validation.RecaptchaValidator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

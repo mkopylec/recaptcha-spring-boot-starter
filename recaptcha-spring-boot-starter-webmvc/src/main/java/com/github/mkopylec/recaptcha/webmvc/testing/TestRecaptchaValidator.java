@@ -1,16 +1,21 @@
 package com.github.mkopylec.recaptcha.webmvc.testing;
 
-import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.webmvc.validation.ErrorCode;
+import com.github.mkopylec.recaptcha.commons.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.commons.RecaptchaProperties.Testing;
+import com.github.mkopylec.recaptcha.commons.validation.ValidationResult;
 import com.github.mkopylec.recaptcha.webmvc.validation.RecaptchaValidator;
-import com.github.mkopylec.recaptcha.webmvc.validation.ValidationResult;
+import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class TestRecaptchaValidator extends RecaptchaValidator {
 
-    protected final RecaptchaProperties.Testing testing;
+    private static final Logger log = getLogger(TestRecaptchaValidator.class);
+
+    protected final Testing testing;
 
     public TestRecaptchaValidator(RecaptchaProperties recaptcha) {
         super(null, recaptcha);
@@ -47,10 +52,12 @@ public class TestRecaptchaValidator extends RecaptchaValidator {
         return getValidationResult();
     }
 
-    private ValidationResult getValidationResult() {
+    protected ValidationResult getValidationResult() {
+        ValidationResult result = new ValidationResult(false, testing.getResultErrorCodes());
         if (testing.isSuccessResult()) {
-            return new ValidationResult(true, new ArrayList<ErrorCode>());
+            result = new ValidationResult(true, new ArrayList<>());
         }
-        return new ValidationResult(false, testing.getResultErrorCodes());
+        log.debug("reCAPTCHA validation finished: {}", result);
+        return result;
     }
 }

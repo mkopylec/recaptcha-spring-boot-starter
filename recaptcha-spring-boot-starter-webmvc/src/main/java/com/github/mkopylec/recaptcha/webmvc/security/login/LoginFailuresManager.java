@@ -1,7 +1,7 @@
 package com.github.mkopylec.recaptcha.webmvc.security.login;
 
-import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties.Security;
+import com.github.mkopylec.recaptcha.commons.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.commons.RecaptchaProperties.Security;
 import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;

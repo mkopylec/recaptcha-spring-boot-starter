@@ -33,23 +33,11 @@ subprojects {
         okhttpVersion = '3.12.0'
         jacksonVersion = '2.9.7'
         spockSpringVersion = '1.2-groovy-2.5'
-        wiremockVersion = '2.19.0'
+        mockServerVersion = '5.5.0'
     }
-
+    
     dependencies {
-        
-        compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: jacksonVersion
-
-        compileOnly group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: springBootVersion
-        compileOnly group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: springBootVersion
-
-        testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
-        testCompile group: 'org.spockframework', name: 'spock-spring', version: spockSpringVersion
-        testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: wiremockVersion
-    }
-
-    configurations {
-        testCompile.extendsFrom compileOnly
+        compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: springBootVersion
     }
 
     task javadocJar(type: Jar) {

@@ -9,12 +9,13 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.net.InetSocketAddress;
+import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class RecaptchaValidator {
@@ -41,31 +42,34 @@ public class RecaptchaValidator {
         return validate(getUserResponse(exchange), ipAddress, secretKey);
     }
 
-    public Mono<ValidationResult> validate(Mono<String> userResponse) {
+    public Mono<ValidationResult> validate(Mono<Optional<String>> userResponse) {
         return validate(userResponse, null);
     }
 
-    public Mono<ValidationResult> validate(Mono<String> userResponse, String ipAddress) {
+    public Mono<ValidationResult> validate(Mono<Optional<String>> userResponse, String ipAddress) {
         return validate(userResponse, ipAddress, validation.getSecretKey());
     }
 
-    public Mono<ValidationResult> validate(Mono<String> userResponse, String ipAddress, String secretKey) {
-        Mono<MultiValueMap<String, Object>> body = userResponse.map(response -> {
-            MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-            parameters.add("secret", secretKey);
-            parameters.add("response", response);
-            parameters.add("remoteip", ipAddress);
-            log.debug("Validating reCAPTCHA:\n    verification url: {}\n    verification parameters: {}", validation.getVerificationUrl(), parameters);
-            return parameters;
-        });
-        return webClient.post()
+    public Mono<ValidationResult> validate(Mono<Optional<String>> userResponse, String ipAddress, String secretKey) {
+        Mono<MultiValueMap<String, Object>> body = userResponse
+                .map(response -> {
+                    MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+                    parameters.add("secret", secretKey);
+                    parameters.add("response", response.orElse(null));
+                    parameters.add("remoteip", ipAddress);
+                    return parameters;
+                })
+                .doOnSuccess(parameters -> log.debug("Validating reCAPTCHA:\n    verification url: {}\n    verification parameters: {}", validation.getVerificationUrl(), parameters));
+        return webClient
+                .post()
+                .uri(validation.getVerificationUrl())
                 .body(body, new ParameterizedTypeReference<MultiValueMap<String, Object>>() {
 
                 })
                 .retrieve()
                 .bodyToMono(ValidationResult.class)
                 .doOnSuccess(result -> log.debug("reCAPTCHA validation finished: {}", result))
-                .doOnError(WebClientException.class, ex -> {
+                .doOnError(Exception.class, ex -> {
                     throw new RecaptchaValidationException(validation.getVerificationUrl(), ex);
                 });
     }
@@ -75,8 +79,8 @@ public class RecaptchaValidator {
         return remoteAddress != null ? remoteAddress.getAddress().toString() : null;
     }
 
-    protected Mono<String> getUserResponse(ServerWebExchange exchange) {
+    protected Mono<Optional<String>> getUserResponse(ServerWebExchange exchange) {
         return exchange.getFormData()
-                .map(parameters -> parameters.getFirst(validation.getResponseParameter()));
+                .map(parameters -> ofNullable(parameters.getFirst(validation.getResponseParameter())));
     }
 }

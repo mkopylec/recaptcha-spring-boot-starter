@@ -1,11 +1,12 @@
 package com.github.mkopylec.recaptcha.webmvc.validation;
 
-import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties.Validation;
+import com.github.mkopylec.recaptcha.commons.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.commons.RecaptchaProperties.Validation;
+import com.github.mkopylec.recaptcha.commons.validation.RecaptchaValidationException;
+import com.github.mkopylec.recaptcha.commons.validation.ValidationResult;
 import org.slf4j.Logger;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +57,7 @@ public class RecaptchaValidator {
             ValidationResult result = restTemplate.postForEntity(validation.getVerificationUrl(), parameters, ValidationResult.class).getBody();
             log.debug("reCAPTCHA validation finished: {}", result);
             return result;
-        } catch (RestClientException ex) {
+        } catch (Exception ex) {
             throw new RecaptchaValidationException(validation.getVerificationUrl(), ex);
         }
     }

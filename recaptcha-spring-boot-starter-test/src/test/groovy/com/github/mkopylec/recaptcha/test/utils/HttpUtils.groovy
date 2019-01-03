@@ -5,7 +5,7 @@ import org.springframework.util.MultiValueMap
 
 class HttpUtils {
 
-    static MultiValueMap<String, Object> toFormData(Map<String, Object> parameters) {
+    static MultiValueMap<String, String> toFormData(Map<String, String> parameters) {
         def formData = new LinkedMultiValueMap<>()
         for (def parameter : parameters.entrySet()) {
             formData.add(parameter.key, parameter.value)

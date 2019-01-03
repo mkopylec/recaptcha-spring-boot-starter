@@ -1,7 +1,7 @@
 package com.github.mkopylec.recaptcha.webmvc.validation;
 
-import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties;
-import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties.Validation.Timeout;
+import com.github.mkopylec.recaptcha.commons.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.commons.RecaptchaProperties.Validation.Timeout;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.Duration;
+import static com.github.mkopylec.recaptcha.commons.validation.Utils.toMilliseconds;
 
 @Configuration
 @EnableConfigurationProperties(RecaptchaProperties.class)
@@ -36,9 +36,5 @@ public class ValidationConfiguration {
         requestFactory.setReadTimeout(toMilliseconds(timeout.getRead()));
         requestFactory.setWriteTimeout(toMilliseconds(timeout.getWrite()));
         return new RestTemplate(requestFactory);
-    }
-
-    protected int toMilliseconds(Duration duration) {
-        return (int) duration.toMillis();
     }
 }

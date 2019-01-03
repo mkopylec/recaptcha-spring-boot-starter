@@ -1,6 +1,6 @@
 package com.github.mkopylec.recaptcha.webmvc.security;
 
-import com.github.mkopylec.recaptcha.webmvc.RecaptchaProperties;
+import com.github.mkopylec.recaptcha.commons.RecaptchaProperties;
 import com.github.mkopylec.recaptcha.webmvc.security.login.FormLoginConfigurerEnhancer;
 import com.github.mkopylec.recaptcha.webmvc.security.login.InMemoryLoginFailuresManager;
 import com.github.mkopylec.recaptcha.webmvc.security.login.LoginFailuresClearingHandler;
