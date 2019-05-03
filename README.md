@@ -187,6 +187,8 @@ recaptcha:
     failure-url: /login # URL to redirect to when user authentication fails.
     login-failures-threshold: 5 # Number of allowed login failures before reCAPTCHA must be displayed.
     continue-on-validation-http-error: true # Permits or denies continuing user authentication process after reCAPTCHA validation fails because of HTTP error.
+    proxy: false # Indicates whether the application is behind a proxy (thus a request's remote address will be the proxy's ip).
+    forwardHeader: X-Forwarded-For # The header from which to read the client's ip, used when proxy is set to true.
   testing:
     enabled: false # Flag for enabling and disabling testing mode.
     success-result: true # Defines successful or unsuccessful validation result, can be changed during tests.

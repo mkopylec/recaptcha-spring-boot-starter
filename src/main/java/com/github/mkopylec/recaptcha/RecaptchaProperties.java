@@ -160,6 +160,16 @@ public class RecaptchaProperties {
          */
         private boolean continueOnValidationHttpError = true;
 
+        /**
+         * Indicates whether the application is behind a proxy
+         * (thus a request's remote address will be the proxy's ip).
+         */
+        private boolean proxy=false;
+        /**
+         * The header from which to read the client's ip, used when proxy is set to true.
+         */
+        private String forwardHeader = "X-Forwarded-For";
+
         public String getFailureUrl() {
             return failureUrl;
         }
@@ -182,6 +192,22 @@ public class RecaptchaProperties {
 
         public void setContinueOnValidationHttpError(boolean continueOnValidationHttpError) {
             this.continueOnValidationHttpError = continueOnValidationHttpError;
+        }
+
+        public String getForwardHeader() {
+            return forwardHeader;
+        }
+
+        public void setForwardHeader(String forwardHeader) {
+            this.forwardHeader = forwardHeader;
+        }
+
+        public boolean isProxy() {
+            return proxy;
+        }
+
+        public void setProxy(boolean proxy) {
+            this.proxy = proxy;
         }
     }
 

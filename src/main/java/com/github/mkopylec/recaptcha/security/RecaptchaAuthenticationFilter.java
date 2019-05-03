@@ -49,7 +49,7 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
         if (failuresManager.isRecaptchaRequired(request)) {
             try {
                 String recaptchaResponse = obtainRecaptchaResponse(request);
-                ValidationResult result = recaptchaValidator.validate(recaptchaResponse, request.getRemoteAddr());
+                ValidationResult result = recaptchaValidator.validate(recaptchaResponse, this.getRemoteAddr(request));
                 if (result.isFailure()) {
                     throw new RecaptchaAuthenticationException(result.getErrorCodes());
                 }
@@ -64,7 +64,21 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
         return super.attemptAuthentication(request, response);
     }
 
-    @Override
+
+  /**
+   * Determine a requests original ip (either from the remoteAddress directly, or in a proxy setting from the specified header).
+   *
+   * @param request The request from which to determine the client's ip.
+   * @return the remote address
+   */
+    public String getRemoteAddr(HttpServletRequest request) {
+        return this.recaptcha.getSecurity().isProxy() ?
+            request.getHeader(this.recaptcha.getSecurity().getForwardHeader()) :
+            request.getRemoteAddr();
+    }
+
+
+  @Override
     public void setAuthenticationSuccessHandler(AuthenticationSuccessHandler successHandler) {
         if (!LoginFailuresClearingHandler.class.isAssignableFrom(successHandler.getClass())) {
             throw new IllegalArgumentException("Invalid login success handler. Handler must be an instance of " + LoginFailuresClearingHandler.class.getName() + " but is " + successHandler);
