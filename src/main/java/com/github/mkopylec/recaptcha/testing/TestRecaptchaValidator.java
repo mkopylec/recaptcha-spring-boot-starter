@@ -2,7 +2,6 @@ package com.github.mkopylec.recaptcha.testing;
 
 import com.github.mkopylec.recaptcha.RecaptchaProperties;
 import com.github.mkopylec.recaptcha.RecaptchaProperties.Testing;
-import com.github.mkopylec.recaptcha.validation.ErrorCode;
 import com.github.mkopylec.recaptcha.validation.RecaptchaValidator;
 import com.github.mkopylec.recaptcha.validation.ValidationResult;
 
@@ -14,7 +13,7 @@ public class TestRecaptchaValidator extends RecaptchaValidator {
     protected final Testing testing;
 
     public TestRecaptchaValidator(RecaptchaProperties recaptcha) {
-        super(null, recaptcha);
+        super(null, recaptcha, null);
         testing = recaptcha.getTesting();
     }
 
@@ -50,7 +49,7 @@ public class TestRecaptchaValidator extends RecaptchaValidator {
 
     private ValidationResult getValidationResult() {
         if (testing.isSuccessResult()) {
-            return new ValidationResult(true, new ArrayList<ErrorCode>());
+            return new ValidationResult(true, new ArrayList<>());
         }
         return new ValidationResult(false, testing.getResultErrorCodes());
     }

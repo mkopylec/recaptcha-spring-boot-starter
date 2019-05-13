@@ -49,7 +49,7 @@ public class RecaptchaAuthenticationFilter extends UsernamePasswordAuthenticatio
         if (failuresManager.isRecaptchaRequired(request)) {
             try {
                 String recaptchaResponse = obtainRecaptchaResponse(request);
-                ValidationResult result = recaptchaValidator.validate(recaptchaResponse, request.getRemoteAddr());
+                ValidationResult result = recaptchaValidator.validate(recaptchaResponse, request);
                 if (result.isFailure()) {
                     throw new RecaptchaAuthenticationException(result.getErrorCodes());
                 }

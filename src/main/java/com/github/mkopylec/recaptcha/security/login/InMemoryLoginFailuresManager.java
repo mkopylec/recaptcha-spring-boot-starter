@@ -23,13 +23,13 @@ public class InMemoryLoginFailuresManager extends LoginFailuresManager {
     public void addLoginFailure(HttpServletRequest request) {
         String username = getUsername(request);
         log.debug("Adding login failure for username: {}", username);
-        loginFailures.put(username, getLoginFailuresCount(request) + 1);
+        loginFailures.compute(username, (name, count) -> count == null ? 1 : count + 1);
     }
 
     @Override
     public int getLoginFailuresCount(HttpServletRequest request) {
         String username = getUsername(request);
-        int count = loginFailures.get(username) == null ? 0 : loginFailures.get(username);
+        int count = loginFailures.getOrDefault(username, 0);
         log.debug("Getting login failures count: {} for username: {}", count, username);
         return count;
     }

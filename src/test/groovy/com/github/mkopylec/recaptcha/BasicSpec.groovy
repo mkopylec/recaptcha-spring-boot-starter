@@ -31,11 +31,11 @@ abstract class BasicSpec extends Specification {
 
     private ThreadLocal<String> cookies = new ThreadLocal<>()
 
-    protected ResponseEntity<ValidationResult> validateRecaptcha(String userResponse) {
+    protected ResponseEntity<ValidationResult> validateRecaptcha(String userResponse, String xForwardedFor = null) {
         if (userResponse == null) {
-            return post('/testValidation/userResponse', ValidationResult)
+            return post('/testValidation/userResponse', ValidationResult, [:], xForwardedFor)
         }
-        return post('/testValidation/userResponse', ValidationResult, ['g-recaptcha-response': userResponse])
+        return post('/testValidation/userResponse', ValidationResult, ['g-recaptcha-response': userResponse], xForwardedFor)
     }
 
     protected ResponseEntity<ValidationResult> validateRecaptchaWithIp(String userResponse) {
@@ -58,13 +58,14 @@ abstract class BasicSpec extends Specification {
         return post('/login', Object, params)
     }
 
-    private <T> ResponseEntity<T> post(String path, Class<T> responseType, Map<String, Object> parameters = [:]) {
+    private <T> ResponseEntity<T> post(String path, Class<T> responseType, Map<String, Object> parameters = [:], String xForwardedFor = null) {
         def params = new LinkedMultiValueMap<>()
         for (def parameter : parameters.entrySet()) {
             params.add(parameter.key, parameter.value)
         }
         HttpHeaders headers = new HttpHeaders()
         headers.set(COOKIE, cookies.get())
+        headers.set('X-Forwarded-For', xForwardedFor)
         def request = new HttpEntity<>(params, headers)
         def response = restTemplate.postForEntity(path, request, responseType) as ResponseEntity<T>
         cookies.set(response.headers.get(SET_COOKIE) as String)

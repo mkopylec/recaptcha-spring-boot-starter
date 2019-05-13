@@ -18,14 +18,16 @@ public class RecaptchaValidator {
 
     protected final RestTemplate restTemplate;
     protected final Validation validation;
+    protected final IpAddressResolver ipAddressResolver;
 
-    public RecaptchaValidator(RestTemplate restTemplate, RecaptchaProperties recaptcha) {
+    public RecaptchaValidator(RestTemplate restTemplate, RecaptchaProperties recaptcha, IpAddressResolver ipAddressResolver) {
         this.restTemplate = restTemplate;
         validation = recaptcha.getValidation();
+        this.ipAddressResolver = ipAddressResolver;
     }
 
     public ValidationResult validate(HttpServletRequest request) {
-        return validate(request, request.getRemoteAddr());
+        return validate(request, ipAddressResolver.resolveClientIp(request));
     }
 
     public ValidationResult validate(HttpServletRequest request, String ipAddress) {
@@ -36,8 +38,12 @@ public class RecaptchaValidator {
         return validate(request.getParameter(validation.getResponseParameter()), ipAddress, secretKey);
     }
 
+    public ValidationResult validate(String userResponse, HttpServletRequest request) {
+        return validate(userResponse, ipAddressResolver.resolveClientIp(request));
+    }
+
     public ValidationResult validate(String userResponse) {
-        return validate(userResponse, null);
+        return validate(userResponse, "");
     }
 
     public ValidationResult validate(String userResponse, String ipAddress) {

@@ -11,7 +11,6 @@ import static com.github.mkopylec.recaptcha.assertions.Assertions.assertThat
 import static com.github.mkopylec.recaptcha.stubs.RecaptchaValidationStubs.stubCustomIpSuccessfulRecaptchaValidation
 import static com.github.mkopylec.recaptcha.stubs.RecaptchaValidationStubs.stubInvalidSecretRecaptchaValidation
 import static com.github.mkopylec.recaptcha.stubs.RecaptchaValidationStubs.stubMissingResponseRecaptchaValidation
-import static com.github.mkopylec.recaptcha.stubs.RecaptchaValidationStubs.stubSuccessfulRecaptchaValidation
 import static com.github.mkopylec.recaptcha.validation.ErrorCode.INVALID_SECRET_KEY
 import static com.github.mkopylec.recaptcha.validation.ErrorCode.MISSING_USER_CAPTCHA_RESPONSE
 
@@ -20,13 +19,13 @@ class ValidationSpec extends BasicSpec {
     @Autowired
     private RecaptchaProperties recaptcha
 
-    def "Should successfully validate reCAPTCHA when user response and secret key are valid"() {
+    def "Should successfully validate reCAPTCHA when user response and secret key are valid resolving IP address from X-Forwarded-For header"() {
         given:
-        stubSuccessfulRecaptchaValidation()
+        stubCustomIpSuccessfulRecaptchaValidation('120.130.140.10')
         recaptcha.validation.secretKey = VALID_SECRET
 
         when:
-        def response = validateRecaptcha(VALID_CAPTCHA_RESPONSE)
+        def response = validateRecaptcha(VALID_CAPTCHA_RESPONSE, '120.130.140.10, 320.200.100.0, 11.234.90.10')
 
         then:
         assertThat(response)

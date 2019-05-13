@@ -29,6 +29,10 @@ class RecaptchaValidationStubs {
         stubRecaptchaValidation(VALID_CAPTCHA_RESPONSE, VALID_SECRET, REMOTE_IP_ADDRESS, true, [])
     }
 
+    static void stubCustomIpSuccessfulRecaptchaValidation(String clientIp) {
+        stubRecaptchaValidation(VALID_CAPTCHA_RESPONSE, VALID_SECRET, clientIp, true, [])
+    }
+
     static void stubInvalidSecretRecaptchaValidation() {
         stubRecaptchaValidation(VALID_CAPTCHA_RESPONSE, INVALID_SECRET, '', false, ['invalid-input-secret'])
     }
