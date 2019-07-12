@@ -26,7 +26,7 @@ public class ValidationConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public RecaptchaValidator userResponseValidator(IpAddressResolver ipAddressResolver) {
-        return new RecaptchaValidator(createRestTemplate(), recaptcha, ipAddressResolver);
+        return new DefaultRecaptchaValidator(createRestTemplate(), recaptcha, ipAddressResolver);
     }
 
     @Bean

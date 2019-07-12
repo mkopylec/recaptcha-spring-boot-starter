@@ -2,10 +2,10 @@ plugins {
     id 'groovy'
     id 'maven-publish'
     id 'jacoco'
-    id 'com.github.kt3k.coveralls' version '2.8.2'
+    id 'com.github.kt3k.coveralls' version '2.8.4'
     id 'maven'
     id 'signing'
-    id 'io.codearte.nexus-staging' version '0.20.0'
+    id 'io.codearte.nexus-staging' version '0.21.0'
     id 'pl.allegro.tech.build.axion-release' version '1.10.1'
 }
 
@@ -26,13 +26,13 @@ repositories {
 }
 
 ext {
-    springBootVersion = '2.1.4.RELEASE'
+    springBootVersion = '2.1.6.RELEASE'
 }
 
 dependencies {
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
-    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.14.1'
+    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.14.2'
 
     compileOnly group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: springBootVersion
     compileOnly group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: springBootVersion
@@ -47,16 +47,16 @@ configurations {
 }
 
 wrapper {
-    gradleVersion = '5.4.1'
+    gradleVersion = '5.5.1'
 }
 
 task javadocJar(type: Jar) {
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from javadoc
 }
 
 task sourceJar(type: Jar) {
-    classifier = 'sources'
+    archiveClassifier.set('sources')
     from sourceSets.main.allSource
 }
 
@@ -118,12 +118,13 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
             artifact sourceJar
+            artifact javadocJar
         }
     }
 }
 
 jacoco {
-    toolVersion = '0.8.1'
+    toolVersion = '0.8.4'
 }
 
 jacocoTestReport {

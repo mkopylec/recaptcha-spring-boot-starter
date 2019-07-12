@@ -8,12 +8,11 @@ import com.github.mkopylec.recaptcha.validation.ValidationResult;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 
-public class TestRecaptchaValidator extends RecaptchaValidator {
+public class TestRecaptchaValidator implements RecaptchaValidator {
 
     protected final Testing testing;
 
     public TestRecaptchaValidator(RecaptchaProperties recaptcha) {
-        super(null, recaptcha, null);
         testing = recaptcha.getTesting();
     }
 
@@ -29,6 +28,11 @@ public class TestRecaptchaValidator extends RecaptchaValidator {
 
     @Override
     public ValidationResult validate(HttpServletRequest request, String ipAddress, String secretKey) {
+        return getValidationResult();
+    }
+
+    @Override
+    public ValidationResult validate(String userResponse, HttpServletRequest request) {
         return getValidationResult();
     }
 
